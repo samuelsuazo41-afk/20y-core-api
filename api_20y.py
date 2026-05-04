@@ -1,4 +1,3 @@
-from fastapi import FastAPI
 from pydantic import BaseModel
 from cerebro_20y import Cerebro20Y
 import uvicorn
@@ -25,6 +24,13 @@ def get_score(data: WearablesInput):
 @app.get("/health")
 def health():
     return {"status": "healthy", "p95_target_ms": 50}
+    @app.get("/atlas/pulso")
+async def atlas_pulso():
+    return {
+        "stability_20y": 1,
+        "version": "8.0.0",
+        "p95_ms": 42  # Cambia 42 por tu p95 real si lo mides
+    }
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
