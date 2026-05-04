@@ -1,4 +1,4 @@
-# 20Y Core v8.0.0 - Edge-First OS for Human Energy
+# 20Y app - Edge-First OS for Human Energy
 
 **Regla única**: `stability_20y >= 7` o reset a Día 0. Sin excusas.
 
