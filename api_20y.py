@@ -1,5 +1,3 @@
-### **2. api_20y.py - El API v8.0.0**
-```python
 from fastapi import FastAPI
 import time
 from datetime import datetime
