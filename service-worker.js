@@ -1,11 +1,36 @@
-self.addEventListener('install', e => self.skipWaiting());
-self.addEventListener('activate', e => e.waitUntil(clients.claim()));
+self.addEventListener('install', e => {
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', e => {
+  e.waitUntil(clients.claim());
+});
+
 self.addEventListener('fetch', e => e.respondWith(fetch(e.request)));
 
 self.addEventListener('message', e => {
   if (e.data.type === 'SCHEDULE_SPITH') {
     scheduleSpith(e.data.freq);
   }
+});
+
+self.addEventListener('notificationclick', e => {
+  e.notification.close();
+  const targetTab = e.notification.data?.tab || 'spith';
+  e.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
+      for (const client of clientList) {
+        if (client.url.includes(self.location.origin) && 'focus' in client) {
+          client.focus();
+          client.postMessage({ type: 'OPEN_TAB', tab: targetTab });
+          return;
+        }
+      }
+      if (clients.openWindow) {
+        return clients.openWindow('./#' + targetTab);
+      }
+    })
+  );
 });
 
 function scheduleSpith(freq) {
@@ -19,19 +44,39 @@ function scheduleSpith(freq) {
     next.setDate(next.getDate() + diff);
   }
   const delay = next.getTime() - now.getTime();
+  
   setTimeout(() => {
-    self.registration.showNotification('20Y SPITH', {
-      body: 'Abre 20Y para leer tu Spith de hoy. Nivel 4/4 te espera.',
-      icon: 'icon-192.png',
-      badge: 'icon-192.png',
-      tag: '20y-spith',
-      renotify: true
-    });
+    showSpithNotification();
     scheduleSpith(freq);
   }, delay);
 }
 
-self.addEventListener('notificationclick', e => {
-  e.notification.close();
-  e.waitUntil(clients.openWindow('/'));
-});
+async function showSpithNotification() {
+  const clients = await self.clients.matchAll();
+  if (clients.length > 0) {
+    const msgChannel = new MessageChannel();
+    clients[0].postMessage({ type: 'GET_SPITH' }, [msgChannel.port2]);
+    const spith = await new Promise(resolve => {
+      msgChannel.port1.onmessage = e => resolve(e.data);
+    });
+    self.registration.showNotification('20Y SPITH DIARIO', {
+      body: spith,
+      icon: 'icon-192.png',
+      badge: 'icon-192.png',
+      tag: '20y-spith',
+      renotify: true,
+      requireInteraction: true,
+      data: { tab: 'spith' }
+    });
+  } else {
+    // Si la app está cerrada, manda genérico
+    self.registration.showNotification('20Y SPITH DIARIO', {
+      body: 'Nivel 4/4 activo. Abre 20Y para tu Spith de hoy.',
+      icon: 'icon-192.png',
+      badge: 'icon-192.png',
+      tag: '20y-spith',
+      requireInteraction: true,
+      data: { tab: 'spith' }
+    });
+  }
+}
