@@ -7,25 +7,99 @@
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#00FF00">
   <link rel="icon" href="icon-192.png">
+  <style>
+    body { background:#000; color:#0f0; font-family:monospace; padding:20px; margin:0; }
+    h1 { text-align:center; color:#0f0; margin:10px 0; }
+    .card { border:2px solid #0f0; padding:20px; margin:20px 0; border-radius:8px; }
+    input { background:#111; border:1px solid #0f0; color:#0f0; padding:8px; width:100%; margin:5px 0; font-family:monospace; }
+    button { background:#0f0; color:#000; border:none; padding:10px 20px; font-weight:bold; cursor:pointer; width:100%; margin-top:10px; }
+    button:active { background:#0a0; }
+    .row { display:flex; gap:10px; }
+    .row input { flex:1; }
+    .hidden { display:none; }
+  </style>
 </head>
-<body style="background:#000; color:#0f0; font-family:monospace; padding:20px; margin:0;">
-  <h1 style="text-align:center; color:#0f0; margin:10px 0;">20Y PULSE</h1>
-  <div style="border:2px solid #0f0; padding:20px; margin:20px 0; border-radius:8px;">
+<body>
+  <h1>20Y PULSE</h1>
+  
+  <div class="card" id="viewMode">
     <h2 style="margin-top:0;">MENÚ USUARIO</h2>
-    <p><strong>Nombre:</strong> Samuel Suazo</p>
-    <p><strong>Estado:</strong> Activo</p>
-    <p><strong>Puntos 20Y:</strong> 127</p>
-    <p><strong>Nivel:</strong> 4/4</p>
-    <p><strong>Stability Score:</strong> 98%</p>
+    <p><strong>Nombre:</strong> <span id="viewName">Samuel Suazo</span></p>
+    <p><strong>Estado:</strong> <span id="viewEstado">Activo</span></p>
+    <p><strong>Puntos 20Y:</strong> <span id="viewPuntos">127</span></p>
+    <p><strong>Nivel:</strong> <span id="viewNivel">4/4</span></p>
+    <p><strong>Stability Score:</strong> <span id="viewStability">98%</span></p>
+    <button onclick="editar()">EDITAR DATOS</button>
   </div>
+
+  <div class="card hidden" id="editMode">
+    <h2 style="margin-top:0;">EDITAR USUARIO</h2>
+    <label>Nombre:</label>
+    <input type="text" id="editName" placeholder="Tu nombre">
+    <label>Estado:</label>
+    <input type="text" id="editEstado" placeholder="Activo/Inactivo">
+    <div class="row">
+      <div>
+        <label>Puntos 20Y:</label>
+        <input type="number" id="editPuntos" placeholder="127">
+      </div>
+      <div>
+        <label>Nivel:</label>
+        <input type="text" id="editNivel" placeholder="4/4">
+      </div>
+    </div>
+    <label>Stability Score:</label>
+    <input type="text" id="editStability" placeholder="98%">
+    <button onclick="guardar()">GUARDAR</button>
+    <button onclick="cancelar()" style="background:#333;color:#0f0;margin-top:5px;">CANCELAR</button>
+  </div>
+
   <div style="text-align:center; margin-top:30px; opacity:0.7;">
     <p>20Y CORE SYSTEMS</p>
     <p style="font-size:12px;">SALT, GIRONA, SPAIN</p>
   </div>
+
   <script>
+    // Cargar datos guardados al abrir
+    function cargar() {
+      document.getElementById('viewName').innerText = localStorage.getItem('20y_name') || 'Samuel Suazo';
+      document.getElementById('viewEstado').innerText = localStorage.getItem('20y_estado') || 'Activo';
+      document.getElementById('viewPuntos').innerText = localStorage.getItem('20y_puntos') || '127';
+      document.getElementById('viewNivel').innerText = localStorage.getItem('20y_nivel') || '4/4';
+      document.getElementById('viewStability').innerText = localStorage.getItem('20y_stability') || '98%';
+    }
+
+    function editar() {
+      document.getElementById('editName').value = localStorage.getItem('20y_name') || 'Samuel Suazo';
+      document.getElementById('editEstado').value = localStorage.getItem('20y_estado') || 'Activo';
+      document.getElementById('editPuntos').value = localStorage.getItem('20y_puntos') || '127';
+      document.getElementById('editNivel').value = localStorage.getItem('20y_nivel') || '4/4';
+      document.getElementById('editStability').value = localStorage.getItem('20y_stability') || '98%';
+      document.getElementById('viewMode').classList.add('hidden');
+      document.getElementById('editMode').classList.remove('hidden');
+    }
+
+    function guardar() {
+      localStorage.setItem('20y_name', document.getElementById('editName').value);
+      localStorage.setItem('20y_estado', document.getElementById('editEstado').value);
+      localStorage.setItem('20y_puntos', document.getElementById('editPuntos').value);
+      localStorage.setItem('20y_nivel', document.getElementById('editNivel').value);
+      localStorage.setItem('20y_stability', document.getElementById('editStability').value);
+      cargar();
+      document.getElementById('editMode').classList.add('hidden');
+      document.getElementById('viewMode').classList.remove('hidden');
+    }
+
+    function cancelar() {
+      document.getElementById('editMode').classList.add('hidden');
+      document.getElementById('viewMode').classList.remove('hidden');
+    }
+
+    // Registrar SW y cargar datos
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/service-worker.js');
     }
+    cargar();
   </script>
 </body>
 </html>
