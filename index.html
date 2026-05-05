@@ -6,58 +6,56 @@
   <title>20Y PULSE</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#00FF00">
+  <link rel="icon" href="icon-192.png">
+  <style>
+    body { background:#000; color:#0f0; font-family:monospace; padding:20px; margin:0; }
+    h1 { text-align:center; color:#0f0; margin:10px 0; }
+    h2 { margin:15px 0 10px 0; font-size:18px; }
+   .card { border:2px solid #0f0; padding:20px; margin:20px 0; border-radius:8px; }
+    input,select,textarea { background:#111; border:1px solid #0f0; color:#0f0; padding:8px; width:100%; margin:5px 0; font-family:monospace; box-sizing:border-box; }
+    button { background:#0f0; color:#000; border:none; padding:10px 20px; font-weight:bold; cursor:pointer; width:100%; margin-top:10px; }
+    button:active { background:#0a0; }
+    button.secondary { background:#333; color:#0f0; }
+    button.danger { background:#500; color:#f00; }
+   .row { display:flex; gap:10px; }
+   .row input,.row select { flex:1; }
+   .hidden { display:none; }
+   .spith { background:#001100; border-left:4px solid #0f0; padding:15px; margin:15px 0; font-style:italic; }
+   .objetivo { border:1px solid #0f0; padding:10px; margin:10px 0; border-radius:4px; }
+   .objetivo-header { display:flex; justify-content:space-between; align-items:center; }
+   .progress { background:#111; height:8px; border-radius:4px; margin:8px 0; }
+   .progress-bar { background:#0f0; height:100%; border-radius:4px; transition:width 0.3s; }
+   .tabs { display:flex; gap:5px; margin-bottom:15px; }
+   .tab { flex:1; padding:8px; background:#111; border:1px solid #0f0; cursor:pointer; text-align:center; }
+   .tab.active { background:#0f0; color:#000; font-weight:bold; }
+  </style>
 </head>
 <body>
   <h1>20Y PULSE</h1>
-  <div id="app">CARGANDO...</div>
-
-<script>
-// PEGAR AQUÍ TODO EL JAVASCRIPT QUE TE DI ANTES
-
-function getObjetivos() {
-  return JSON.parse(localStorage.getItem('20y_objetivos') || '[]');
-}
-
-function setObjetivos(arr) {
-  localStorage.setItem('20y_objetivos', JSON.stringify(arr));
-}
-
-function cancelarObjetivo() {
-  // tu función cancelar
-}
-
-function guardarObjetivo() {
-  const id = document.getElementById('objId').value || Date.now().toString();
-  const titulo = document.getElementById('objTitulo').value;
-  const meta = parseInt(document.getElementById('objMeta').value) || 1;
-  const actual = parseInt(document.getElementById('objActual').value) || 0;
   
-  const obj = {
-    id, titulo,
-    desc: document.getElementById('objDesc').value,
-    meta, actual,
-    categoria: document.getElementById('objCategoria').value
-  };
-  
-  const objs = getObjetivos().filter(o => o.id !== id);
-  objs.push(obj);
-  setObjetivos(objs);
-  cancelarObjetivo();
+  <div class="tabs">
+    <div class="tab" onclick="showTab('usuario')">USUARIO</div>
+    <div class="tab active" onclick="showTab('objetivos')">OBJETIVOS</div>
+    <div class="tab" onclick="showTab('spith')">SPITH</div>
+  </div>
 
-  // NOTIFICACIÓN SIMPLE
-  if (Notification.permission === 'granted' && actual >= meta) {
-    navigator.serviceWorker.ready.then(reg => {
-      reg.showNotification('20Y COMPLETADO', {
-        body: `Objetivo: ${titulo} - 100%`,
-        icon: 'icon-192.png',
-        tag: '20y-obj'
-      });
-    });
-  }
-}
-
-// AQUÍ VA EL RESTO DE TU CÓDIGO JS
-
-</script>
-</body>
-</html>
+  <!-- TAB USUARIO -->
+  <div class="card hidden" id="tab-usuario">
+    <div id="viewMode">
+      <h2>MENÚ USUARIO</h2>
+      <p><strong>Nombre:</strong> <span id="viewName">Samuel Suazo</span></p>
+      <p><strong>Estado:</strong> <span id="viewEstado">Activo</span></p>
+      <p><strong>Puntos 20Y:</strong> <span id="viewPuntos">127</span></p>
+      <p><strong>Nivel:</strong> <span id="viewNivel">4/4</span></p>
+      <p><strong>Stability Score:</strong> <span id="viewStability">98%</span></p>
+      <button onclick="editarUsuario()">EDITAR DATOS</button>
+    </div>
+    <div id="editMode" class="hidden">
+      <h2>EDITAR USUARIO</h2>
+      <input type="text" id="editName" placeholder="Nombre">
+      <input type="text" id="editEstado" placeholder="Estado">
+      <div class="row">
+        <input type="number" id="editPuntos" placeholder="Puntos">
+        <input type="text" id="editNivel" placeholder="Nivel">
+      </div>
+      <input type="text" id="editSt
