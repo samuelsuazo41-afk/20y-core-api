@@ -215,39 +215,3 @@ function cargarObjetivos() {
   const cont = document.getElementById('listaObjetivos');
   if (objs.length === 0) {
     cont.innerHTML = '<p style="opacity:0.6;">Sin objetivos. Nivel 4/4 no espera. Crea uno.</p>';
-    return;
-  }
-  cont.innerHTML = objs.map(o => {
-    const prog = Math.min(100, Math.round((o.actual / o.meta) * 100));
-    return `
-      <div class="objetivo">
-        <div class="objetivo-header">
-          <strong>${o.titulo}</strong>
-          <span>${o.categoria}</span>
-        </div>
-        <p style="margin:5px 0; font-size:12px; opacity:0.8;">${o.desc}</p>
-        <div class="progress"><div class="progress-bar" style="width:${prog}%"></div></div>
-        <div class="row">
-          <span>${o.actual}/${o.meta} - ${prog}%</span>
-          <button class="secondary" style="flex:1; margin:0;" onclick="editarObjetivo('${o.id}')">EDITAR</button>
-          <button class="danger" style="flex:1; margin:0;" onclick="borrarObjetivo('${o.id}')">X</button>
-        </div>
-      </div>`;
-  }).join('');
-}
-
-function mostrarFormObjetivo() {
-  document.getElementById('tituloFormObj').innerText = 'NUEVO OBJETIVO';
-  document.getElementById('objId').value = '';
-  document.getElementById('objTitulo').value = '';
-  document.getElementById('objDesc').value = '';
-  document.getElementById('objMeta').value = '';
-  document.getElementById('objActual').value = '';
-  document.getElementById('objCategoria').value = 'Personal';
-  document.getElementById('formObjetivo').classList.remove('hidden');
-}
-
-function editarObjetivo(id) {
-  const o = getObjetivos().find(x => x.id === id);
-  document.getElementById('tituloFormObj').innerText = 'EDITAR OBJETIVO';
-  document.getElementById('objId').value =
