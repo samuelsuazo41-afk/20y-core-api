@@ -1,13 +1,15 @@
 {
   "name": "20Y PULSE",
   "short_name": "20Y",
-  "start_url": "./",
-  "scope": "./",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#000000",
-  "theme_color": "#00ff00",
+  "theme_color": "#00FF00",
   "description": "20Y PULSE - Sistema de estabilidad personal",
   "prefer_related_applications": false,
+  "display_override": ["standalone"],
   "icons": [
     {
       "src": "icon-192.png",
@@ -16,8 +18,8 @@
       "purpose": "any maskable"
     },
     {
-      "src": "icon-512.png", 
-      "sizes": "512x512",
+      "src": "icon-512.png",
+      "sizes": "512x512", 
       "type": "image/png",
       "purpose": "any maskable"
     }
