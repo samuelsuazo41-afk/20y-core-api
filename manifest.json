@@ -1,29 +1,21 @@
 {
   "name": "20Y PULSE",
-  "short_name": "20Y",
+  "short_name": "20Y PULSE",
   "start_url": "/",
-  "scope": "/",
   "display": "standalone",
-  "display_override": ["standalone", "window-controls-overlay"],
-  "launch_handler": { "client_mode": "focus-existing" },
   "background_color": "#000000",
   "theme_color": "#00FF00",
-  "description": "20Y PULSE + Coach 20Y - Sistema de ejecución y estabilidad personal",
-  "categories": ["productivity", "utilities"],
-  "prefer_related_applications": false,
-  "related_applications": [],
+  "orientation": "portrait",
   "icons": [
     {
       "src": "icon-192.png",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     },
     {
       "src": "icon-512.png",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     }
   ]
 }
