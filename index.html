@@ -11,7 +11,7 @@
     body { background:#000; color:#0f0; font-family:monospace; padding:20px; margin:0; }
     h1 { text-align:center; color:#0f0; margin:10px 0; }
     h2 { margin:15px 0 10px 0; font-size:18px; }
-  .card { border:2px solid #0f0; padding:20px; margin:20px 0; border-radius:8px; }
+.card { border:2px solid #0f0; padding:20px; margin:20px 0; border-radius:8px; }
     input,select,textarea { background:#111; border:1px solid #0f0; color:#0f0; padding:8px; width:100%; margin:5px 0; font-family:monospace; box-sizing:border-box; }
     button { background:#0f0; color:#000; border:none; padding:10px 20px; font-weight:bold; cursor:pointer; width:100%; margin-top:10px; }
     button:active { background:#0a0; }
@@ -19,28 +19,28 @@
     button.danger { background:#500; color:#f00; }
     button.plan { background:#050; color:#0f0; border:1px solid #0f0; }
     button.coach { background:#0a0; color:#000; border:1px solid #0f0; }
-  .row { display:flex; gap:10px; }
-  .row input,.row select { flex:1; }
-  .hidden { display:none; }
-  .spith { background:#001100; border-left:4px solid #0f0; padding:15px; margin:15px 0; font-style:italic; }
-  .coach-box { background:#001a00; border-left:4px solid #0a0; padding:15px; margin:15px 0; }
-  .coach-box h3 { color:#0a0; margin:0 0 10px 0; }
-  .objetivo { border:1px solid #0f0; padding:10px; margin:10px 0; border-radius:4px; }
-  .objetivo-header { display:flex; justify-content:space-between; align-items:center; }
-  .progress { background:#111; height:8px; border-radius:4px; margin:8px 0; }
-  .progress-bar { background:#0f0; height:100%; border-radius:4px; transition:width 0.3s; }
-  .tabs { display:flex; gap:5px; margin-bottom:15px; flex-wrap:wrap; }
-  .tab { flex:1; padding:8px; background:#111; border:1px solid #0f0; cursor:pointer; text-align:center; min-width:80px; }
-  .tab.active { background:#0f0; color:#000; font-weight:bold; }
-  .orden { background:#110000; border:2px solid #f00; padding:15px; margin:15px 0; }
-  .orden h3 { color:#f00; margin:0 0 10px 0; }
-  .planbox { background:#001a00; border:2px solid #0f0; padding:15px; margin:15px 0; }
-  .planbox h3 { color:#0f0; margin:0 0 10px 0; }
-  .planbox ol { margin:10px 0; padding-left:20px; }
-  .planbox li { margin:8px 0; }
-  .kpi { display:flex; justify-content:space-between; margin:8px 0; }
-  .historial { max-height:200px; overflow-y:auto; border:1px solid #0a0; padding:10px; margin-top:10px; }
-  .historial-item { border-bottom:1px solid #030; padding:8px 0; font-size:12px; }
+.row { display:flex; gap:10px; }
+.row input,.row select { flex:1; }
+.hidden { display:none; }
+.spith { background:#001100; border-left:4px solid #0f0; padding:15px; margin:15px 0; font-style:italic; }
+.coach-box { background:#001a00; border-left:4px solid #0a0; padding:15px; margin:15px 0; }
+.coach-box h3 { color:#0a0; margin:0 0 10px 0; }
+.objetivo { border:1px solid #0f0; padding:10px; margin:10px 0; border-radius:4px; }
+.objetivo-header { display:flex; justify-content:space-between; align-items:center; }
+.progress { background:#111; height:8px; border-radius:4px; margin:8px 0; }
+.progress-bar { background:#0f0; height:100%; border-radius:4px; transition:width 0.3s; }
+.tabs { display:flex; gap:5px; margin-bottom:15px; flex-wrap:wrap; }
+.tab { flex:1; padding:8px; background:#111; border:1px solid #0f0; cursor:pointer; text-align:center; min-width:80px; }
+.tab.active { background:#0f0; color:#000; font-weight:bold; }
+.orden { background:#110000; border:2px solid #f00; padding:15px; margin:15px 0; }
+.orden h3 { color:#f00; margin:0 0 10px 0; }
+.planbox { background:#001a00; border:2px solid #0f0; padding:15px; margin:15px 0; }
+.planbox h3 { color:#0f0; margin:0 0 10px 0; }
+.planbox ol { margin:10px 0; padding-left:20px; }
+.planbox li { margin:8px 0; }
+.kpi { display:flex; justify-content:space-between; margin:8px 0; }
+.historial { max-height:200px; overflow-y:auto; border:1px solid #0a0; padding:10px; margin-top:10px; }
+.historial-item { border-bottom:1px solid #030; padding:8px 0; font-size:12px; }
   </style>
 </head>
 <body>
@@ -57,4 +57,167 @@
   <div class="card hidden" id="tab-usuario">
     <div id="viewMode">
       <h2>MENÚ USUARIO</h2>
-      <p><strong>Nombre:</strong>
+      <p><strong>Nombre:</strong> <span id="viewName">Samuel Suazo</span></p>
+      <p><strong>Estado:</strong> <span id="viewEstado">Activo</span></p>
+      <p><strong>Puntos 20Y:</strong> <span id="viewPuntos">0</span></p>
+      <p><strong>Nivel:</strong> <span id="viewNivel">1/4</span></p>
+      <p><strong>Stability Score:</strong> <span id="viewStability">0%</span></p>
+      <button onclick="editarUsuario()">EDITAR DATOS</button>
+    </div>
+    <div id="editMode" class="hidden">
+      <h2>EDITAR USUARIO</h2>
+      <input type="text" id="editName" placeholder="Nombre">
+      <input type="text" id="editEstado" placeholder="Estado - Usa emojis 🔥">
+      <div class="row">
+        <input type="number" id="editPuntos" placeholder="Puntos">
+        <input type="text" id="editNivel" placeholder="Nivel">
+      </div>
+      <input type="text" id="editStability" placeholder="Stability">
+      <button onclick="guardarUsuario()">GUARDAR</button>
+      <button class="secondary" onclick="cancelarUsuario()">CANCELAR</button>
+    </div>
+  </div>
+
+  <div class="card" id="tab-objetivos">
+    <h2>OBJETIVOS Y METAS 20Y</h2>
+    <div id="listaObjetivos"></div>
+    <button onclick="mostrarFormObjetivo()">+ NUEVO OBJETIVO</button>
+    
+    <div id="formObjetivo" class="hidden" style="margin-top:20px; border-top:1px solid #0f0; padding-top:15px;">
+      <h2 id="tituloFormObj">NUEVO OBJETIVO</h2>
+      <input type="text" id="objTitulo" placeholder="Título: Ej. Vender 20Y">
+      <textarea id="objDesc" placeholder="Por qué importa este objetivo" rows="2"></textarea>
+      <div class="row">
+        <input type="number" id="objMeta" placeholder="Meta: 1">
+        <input type="number" id="objActual" placeholder="Actual: 0">
+      </div>
+      <select id="objCategoria">
+        <option value="Personal">Personal</option>
+        <option value="Salud">Salud</option>
+        <option value="Finanzas">Finanzas</option>
+        <option value="20Y Core">20Y Core</option>
+      </select>
+      <input type="hidden" id="objId">
+      <button onclick="guardarObjetivo()">GUARDAR OBJETIVO</button>
+      <button class="secondary" onclick="cancelarObjetivo()">CANCELAR</button>
+    </div>
+
+    <div style="margin-top:20px; border-top:1px solid #0f0; padding-top:15px;">
+      <h2>TEST DE REVISIÓN</h2>
+      <p id="preguntaTest">¿Ejecutaste 1 acción clave hoy?</p>
+      <button onclick="responderTest(true)">SÍ - SUMAR 5 PUNTOS 20Y</button>
+      <button class="secondary" onclick="responderTest(false)">NO - REVISAR MAÑANA</button>
+    </div>
+  </div>
+
+  <div class="card hidden" id="tab-spith">
+    <h2>20Y SPITH</h2>
+    <div id="spithBox" class="spith">Activa notificaciones para recibir tu Spith diario.</div>
+    <select id="frecuencia">
+      <option value="diario">Diario 09:00h</option>
+      <option value="semanal">Semanal Lunes 09:00h</option>
+    </select>
+    <button id="notifBtn" onclick="activarNotificaciones()">ACTIVAR SPITH + NOTIFICACIONES</button>
+    <button class="secondary" onclick="generarSpithYa()">GENERAR SPITH AHORA</button>
+  </div>
+
+  <div class="card hidden" id="tab-ejecucion">
+    <h2>ORDEN DE EJECUCIÓN 20Y</h2>
+    <div id="resumenKPI"></div>
+    
+    <div id="planBox" class="planbox hidden">
+      <h3>📋 PLAN ESTRATÉGICO 20Y</h3>
+      <div id="textoPlan"></div>
+    </div>
+
+    <div id="ordenBox" class="orden">
+      <h3>⚡ORDEN DEL DÍA</h3>
+      <p id="textoOrden">Genera tu orden para ver la misión crítica de hoy.</p>
+    </div>
+    
+    <button onclick="generarOrdenEjecucion()">GENERAR ORDEN DE EJECUCIÓN</button>
+    <button class="plan" onclick="generarPlanEstrategico()">GENERAR PLAN ESTRATÉGICO</button>
+    <button class="secondary" onclick="marcarOrdenCumplida()">MARCAR ORDEN CUMPLIDA +10 PUNTOS</button>
+  </div>
+
+  <div class="card hidden" id="tab-coach">
+    <h2>COACH 20Y PULSE</h2>
+    <div id="coachBox" class="coach-box">
+      <h3>🧠 CONSEJO TÁCTICO</h3>
+      <p id="textoCoach">Toca GENERAR CONSEJO para que el Cerebro 20Y analice tu estado.</p>
+    </div>
+    
+    <button class="coach" onclick="generarConsejoCoach()">GENERAR CONSEJO 20Y + NOTIFICAR</button>
+    <button class="secondary" onclick="borrarHistorialCoach()">BORRAR HISTORIAL</button>
+    
+    <h2 style="margin-top:20px;">HISTORIAL COACH</h2>
+    <div id="historialCoach" class="historial">
+      <p style="opacity:0.7">Sin consejos aún. Genera el primero.</p>
+    </div>
+  </div>
+
+  <div style="text-align:center; margin-top:30px; opacity:0.7;">
+    <p>20Y CORE SYSTEMS v8.5</p>
+    <p style="font-size:12px;">SALT, GIRONA, SPAIN</p>
+  </div>
+
+<script>
+const spiths = [
+  "Nivel {nivel}. {puntos} 20Y. Stability {stability}. {objCount} misiones activas. Ejecuta.",
+  "{nombre}, {objCompletados}/{objCount} cazados. {puntos} 20Y. No pares ahora.",
+  "Stability {stability}. {puntos} 20Y. Target: {objPrincipal}. Nivel {nivel} exige sangre.",
+  "20Y PULSE: {objCompletados} objetivos eliminados. {puntos} puntos. Sube el standard o muere.",
+  "Estado {estado}. {objPendientes} objetivos abiertos. {puntos} 20Y no caen del cielo."
+];
+
+const consejosCoach = {
+  inicio: [
+    "Stability {stability} es crítico. Tu primera venta define el sistema. Hoy: 1 llamada a prospecto. Sin excusas.",
+    "Nivel {nivel} con {objPendientes} objetivos abiertos. Elige 1. Mata los demás. Focus = Fuerza.",
+    "Tienes {puntos} puntos pero 0 momentum. Acción mata ansiedad. Ejecuta +1 en '{objPrincipal}' AHORA."
+  ],
+  medio: [
+    "Stability {stability}. Ya no eres principiante. Sube el precio de '{objPrincipal}' 20%. Si no duele, no vale.",
+    "{objCompletados}/{objCount} cazados. Bien. Ahora duplica velocidad: 2 acciones clave antes de 14:00h.",
+    "Puntos {puntos} estancados = muerte lenta. Cierra 1 objetivo esta semana o bórralo. Decisión."
+  ],
+  alto: [
+    "Nivel {nivel}. Stability {stability}. Deja de operar, empieza a dirigir. Delega '{objPrincipal}' y crea sistema.",
+    "{puntos} 20Y. Ya probaste que funcionas. Próximo nivel: convierte 20Y PULSE en activo vendible. 72h.",
+    "Estado {estado} con {objPendientes} frentes. General no pelea todas las batallas. Elige el 20% que da 80%."
+  ]
+};
+
+function showTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('[id^="tab-"]').forEach(t => t.classList.add('hidden'));
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    const tabs = ['usuario','objetivos','spith','ejecucion','coach'];
+    if(tabs[i] === tab) t.classList.add('active');
+  });
+  document.getElementById('tab-'+tab).classList.remove('hidden');
+  
+  if(tab === 'usuario') cargar();
+  if(tab === 'objetivos') cargarObjetivos();
+  if(tab === 'spith') generarSpithYa();
+  if(tab === 'ejecucion') { actualizarKPIs(); generarOrdenEjecucion(); }
+  if(tab === 'coach') cargarHistorialCoach();
+}
+
+function notificar20Y(titulo, mensaje, vibrar = false, tab = 'objetivos') {
+  if (Notification.permission === 'granted') {
+    navigator.serviceWorker.ready.then(reg => {
+      reg.showNotification(titulo, {
+        body: mensaje,
+        icon: 'icon-192.png',
+        badge: 'icon-192.png',
+        tag: '20y-pulse',
+        vibrate: vibrar? [200,100,200] : [],
+        requireInteraction: true,
+        data: { tab: tab }
+      });
+    });
+  }
+}
+
+function cargar() {
