@@ -188,4 +188,22 @@ function cargar() {
   document.getElementById('frecuencia').value = localStorage.getItem('20y_freq') || 'diario';
   mostrarUltimoSpith();
   checkNotifStatus();
-  cargarObjetivos();
+  cargarObjetivos();
+}
+
+// === REGISTRO SERVICE WORKER V8 ===
+// ESTE BLOQUE FALTABA. SIN ESTO NO HAY PROMPT DE INSTALACIÓN.
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js?v=8')
+     .then(reg => console.log('20Y SW v8 registrado:', reg.scope))
+     .catch(err => console.log('20Y SW error:', err));
+  });
+}
+
+// === RESTO DE TUS FUNCIONES ===
+// [Aquí sigue todo tu código JS que ya tenías: cargarObjetivos, guardarObjetivo, etc.]
+
+</script>
+</body>
+</html>
