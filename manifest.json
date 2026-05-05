@@ -5,11 +5,14 @@
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
+  "display_override": ["standalone", "window-controls-overlay"],
+  "launch_handler": { "client_mode": "focus-existing" },
   "background_color": "#000000",
   "theme_color": "#00FF00",
   "description": "20Y PULSE - Sistema de estabilidad personal",
+  "categories": ["productivity", "utilities"],
   "prefer_related_applications": false,
-  "display_override": ["standalone"],
+  "related_applications": [],
   "icons": [
     {
       "src": "icon-192.png",
