@@ -41,6 +41,7 @@
 .kpi { display:flex; justify-content:space-between; margin:8px 0; }
 .historial { max-height:200px; overflow-y:auto; border:1px solid #0a0; padding:10px; margin-top:10px; }
 .historial-item { border-bottom:1px solid #030; padding:8px 0; font-size:12px; }
+.mision { background:#001100; border:2px solid #0a0; padding:15px; margin:15px 0; text-align:center; }
   </style>
 </head>
 <body>
@@ -57,16 +58,22 @@
   <div class="card hidden" id="tab-usuario">
     <div id="viewMode">
       <h2>MENÚ USUARIO</h2>
+      <div class="mision">
+        <strong>MISIÓN 20Y:</strong><br>
+        <span id="viewMision">Desbloquear Nivel 5 LEYENDA</span>
+      </div>
       <p><strong>Nombre:</strong> <span id="viewName">Samuel Suazo</span></p>
       <p><strong>Estado:</strong> <span id="viewEstado">Activo</span></p>
       <p><strong>Puntos 20Y:</strong> <span id="viewPuntos">0</span></p>
-      <p><strong>Nivel:</strong> <span id="viewNivel">1/4</span></p>
+      <p><strong>Nivel:</strong> <span id="viewNivel">4/5 TITÁN</span></p>
+      <p><strong>Racha:</strong> <span id="viewRacha">0 días</span> 🔥</p>
       <p><strong>Stability Score:</strong> <span id="viewStability">0%</span></p>
       <button onclick="editarUsuario()">EDITAR DATOS</button>
     </div>
     <div id="editMode" class="hidden">
       <h2>EDITAR USUARIO</h2>
       <input type="text" id="editName" placeholder="Nombre">
+      <input type="text" id="editMision" placeholder="Misión 20Y - Ej: Desbloquear Nivel 5">
       <input type="text" id="editEstado" placeholder="Estado - Usa emojis 🔥">
       <div class="row">
         <input type="number" id="editPuntos" placeholder="Puntos">
@@ -157,34 +164,39 @@
   </div>
 
   <div style="text-align:center; margin-top:30px; opacity:0.7;">
-    <p>20Y CORE SYSTEMS v8.5</p>
+    <p>20Y CORE SYSTEMS v9.0 LEYENDA</p>
     <p style="font-size:12px;">SALT, GIRONA, SPAIN</p>
   </div>
 
 <script>
 const spiths = [
-  "Nivel {nivel}. {puntos} 20Y. Stability {stability}. {objCount} misiones activas. Ejecuta.",
-  "{nombre}, {objCompletados}/{objCount} cazados. {puntos} 20Y. No pares ahora.",
-  "Stability {stability}. {puntos} 20Y. Target: {objPrincipal}. Nivel {nivel} exige sangre.",
-  "20Y PULSE: {objCompletados} objetivos eliminados. {puntos} puntos. Sube el standard o muere.",
-  "Estado {estado}. {objPendientes} objetivos abiertos. {puntos} 20Y no caen del cielo."
+  "Nivel {nivel}. {puntos} 20Y. Stability {stability}. Racha {racha} días. {objCount} misiones. Ejecuta.",
+  "{nombre}, {objCompletados}/{objCount} cazados. {puntos} 20Y. Racha {racha}. No pares ahora.",
+  "Stability {stability}. {puntos} 20Y. Target: {objPrincipal}. Nivel {nivel} exige sangre. Racha {racha}.",
+  "20Y PULSE: {objCompletados} objetivos eliminados. {puntos} puntos. Racha {racha} días. Sube el standard.",
+  "Estado {estado}. {objPendientes} objetivos abiertos. {puntos} 20Y. Misión: {mision}. Racha {racha}."
 ];
 
 const consejosCoach = {
   inicio: [
-    "Stability {stability} es crítico. Tu primera venta define el sistema. Hoy: 1 llamada a prospecto. Sin excusas.",
-    "Nivel {nivel} con {objPendientes} objetivos abiertos. Elige 1. Mata los demás. Focus = Fuerza.",
-    "Tienes {puntos} puntos pero 0 momentum. Acción mata ansiedad. Ejecuta +1 en '{objPrincipal}' AHORA."
+    "Stability {stability} es crítico. Racha {racha} días. Primera venta define sistema. Hoy: 1 llamada.",
+    "Nivel {nivel} con {objPendientes} objetivos. Racha {racha}. Elige 1. Mata los demás. Focus = Fuerza.",
+    "Tienes {puntos} puntos, Racha {racha}. Acción mata ansiedad. Ejecuta +1 en '{objPrincipal}' AHORA."
   ],
   medio: [
-    "Stability {stability}. Ya no eres principiante. Sube el precio de '{objPrincipal}' 20%. Si no duele, no vale.",
-    "{objCompletados}/{objCount} cazados. Bien. Ahora duplica velocidad: 2 acciones clave antes de 14:00h.",
-    "Puntos {puntos} estancados = muerte lenta. Cierra 1 objetivo esta semana o bórralo. Decisión."
+    "Stability {stability}. Racha {racha} días. Sube precio de '{objPrincipal}' 20%. Si no duele, no vale.",
+    "{objCompletados}/{objCount} cazados. Racha {racha}. Duplica velocidad: 2 acciones clave antes 14:00h.",
+    "Puntos {puntos} + Racha {racha}. Estancado = muerte lenta. Cierra 1 objetivo esta semana o bórralo."
   ],
   alto: [
-    "Nivel {nivel}. Stability {stability}. Deja de operar, empieza a dirigir. Delega '{objPrincipal}' y crea sistema.",
-    "{puntos} 20Y. Ya probaste que funcionas. Próximo nivel: convierte 20Y PULSE en activo vendible. 72h.",
-    "Estado {estado} con {objPendientes} frentes. General no pelea todas las batallas. Elige el 20% que da 80%."
+    "Nivel {nivel}. Stability {stability}. Racha {racha} días. Delega '{objPrincipal}' y crea sistema.",
+    "{puntos} 20Y. Racha {racha}. Ya probaste que funcionas. Próximo: convierte 20Y PULSE en activo vendible.",
+    "Estado {estado} con {objPendientes} frentes. Racha {racha}. General no pelea todas. Elige el 20% que da 80%."
+  ],
+  leyenda: [
+    "LEYENDA 5/5. {puntos} 20Y. Racha {racha} días. Stability {stability}. Ahora enseña a 10 TITANES.",
+    "Misión {mision} cumplida. Nivel LEYENDA. Deja de operar, empieza a escalar. Sistema > Tú.",
+    "Racha {racha} días te hizo LEYENDA. {puntos} puntos. Próxima misión: 20Y PULSE en 100 empresas."
   ]
 };
 
@@ -220,4 +232,242 @@ function notificar20Y(titulo, mensaje, vibrar = false, tab = 'objetivos') {
   }
 }
 
-function cargar() {
+function cargar() {
+  document.getElementById('viewName').innerText = localStorage.getItem('20y_name') || 'Samuel Suazo';
+  document.getElementById('viewMision').innerText = localStorage.getItem('20y_mision') || 'Desbloquear Nivel 5 LEYENDA';
+  document.getElementById('viewEstado').innerText = localStorage.getItem('20y_estado') || 'Activo';
+  document.getElementById('viewPuntos').innerText = localStorage.getItem('20y_puntos') || '0';
+  document.getElementById('viewNivel').innerText = localStorage.getItem('20y_nivel') || '4/5 TITÁN';
+  document.getElementById('viewRacha').innerText = (localStorage.getItem('20y_racha') || '0') + ' días';
+  document.getElementById('viewStability').innerText = localStorage.getItem('20y_stability') || '0%';
+  document.getElementById('frecuencia').value = localStorage.getItem('20y_freq') || 'diario';
+  mostrarUltimoSpith();
+  checkNotifStatus();
+  checkNivel5();
+}
+
+function editarUsuario() {
+  document.getElementById('viewMode').classList.add('hidden');
+  document.getElementById('editMode').classList.remove('hidden');
+  document.getElementById('editName').value = localStorage.getItem('20y_name') || 'Samuel Suazo';
+  document.getElementById('editMision').value = localStorage.getItem('20y_mision') || 'Desbloquear Nivel 5 LEYENDA';
+  document.getElementById('editEstado').value = localStorage.getItem('20y_estado') || 'Activo';
+  document.getElementById('editPuntos').value = localStorage.getItem('20y_puntos') || '0';
+  document.getElementById('editNivel').value = localStorage.getItem('20y_nivel') || '4/5 TITÁN';
+  document.getElementById('editStability').value = localStorage.getItem('20y_stability') || '0%';
+}
+
+function guardarUsuario() {
+  const nuevoEstado = document.getElementById('editEstado').value;
+  localStorage.setItem('20y_name', document.getElementById('editName').value);
+  localStorage.setItem('20y_mision', document.getElementById('editMision').value);
+  localStorage.setItem('20y_estado', nuevoEstado);
+  localStorage.setItem('20y_puntos', document.getElementById('editPuntos').value);
+  localStorage.setItem('20y_nivel', document.getElementById('editNivel').value);
+  localStorage.setItem('20y_stability', document.getElementById('editStability').value);
+  cancelarUsuario();
+  cargar();
+  notificar20Y('🔥 20Y PULSE', `Perfil actualizado. Misión: ${localStorage.getItem('20y_mision')}`, true, 'usuario');
+}
+
+function cancelarUsuario() {
+  document.getElementById('viewMode').classList.remove('hidden');
+  document.getElementById('editMode').classList.add('hidden');
+}
+
+function getObjetivos() {
+  return JSON.parse(localStorage.getItem('20y_objetivos') || '[]');
+}
+
+function setObjetivos(arr) {
+  localStorage.setItem('20y_objetivos', JSON.stringify(arr));
+}
+
+function cargarObjetivos() {
+  const lista = document.getElementById('listaObjetivos');
+  const objs = getObjetivos();
+  if(objs.length === 0) {
+    lista.innerHTML = '<p style="opacity:0.7">Sin objetivos. Crea el primero.</p>';
+    return;
+  }
+  lista.innerHTML = objs.map(o => {
+    const pct = Math.min(100, Math.round((o.actual / o.meta) * 100));
+    return `<div class="objetivo">
+      <div class="objetivo-header">
+        <strong>${o.titulo}</strong>
+        <span>${o.categoria}</span>
+      </div>
+      <div class="progress"><div class="progress-bar" style="width:${pct}%"></div></div>
+      <div class="row">
+        <button class="secondary" onclick="sumarProgreso('${o.id}',1)">+1</button>
+        <button class="secondary" onclick="editarObjetivo('${o.id}')">EDITAR</button>
+        <button class="danger" onclick="borrarObjetivo('${o.id}')">X</button>
+      </div>
+      <small>${o.actual}/${o.meta} - ${o.desc}</small>
+    </div>`;
+  }).join('');
+}
+
+function mostrarFormObjetivo() {
+  document.getElementById('formObjetivo').classList.remove('hidden');
+  document.getElementById('tituloFormObj').innerText = 'NUEVO OBJETIVO';
+  document.getElementById('objId').value = '';
+  document.getElementById('objTitulo').value = '';
+  document.getElementById('objDesc').value = '';
+  document.getElementById('objMeta').value = '1';
+  document.getElementById('objActual').value = '0';
+}
+
+function editarObjetivo(id) {
+  const obj = getObjetivos().find(o => o.id === id);
+  if(!obj) return;
+  document.getElementById('formObjetivo').classList.remove('hidden');
+  document.getElementById('tituloFormObj').innerText = 'EDITAR OBJETIVO';
+  document.getElementById('objId').value = obj.id;
+  document.getElementById('objTitulo').value = obj.titulo;
+  document.getElementById('objDesc').value = obj.desc;
+  document.getElementById('objMeta').value = obj.meta;
+  document.getElementById('objActual').value = obj.actual;
+  document.getElementById('objCategoria').value = obj.categoria;
+}
+
+function guardarObjetivo() {
+  const id = document.getElementById('objId').value || Date.now().toString();
+  const obj = {
+    id: id,
+    titulo: document.getElementById('objTitulo').value,
+    desc: document.getElementById('objDesc').value,
+    meta: parseInt(document.getElementById('objMeta').value) || 1,
+    actual: parseInt(document.getElementById('objActual').value) || 0,
+    categoria: document.getElementById('objCategoria').value
+  };
+  if(!obj.titulo) { alert('Título obligatorio'); return; }
+  const objs = getObjetivos();
+  const idx = objs.findIndex(o => o.id === id);
+  if(idx >= 0) objs[idx] = obj; else objs.push(obj);
+  setObjetivos(objs);
+  cancelarObjetivo();
+  cargarObjetivos();
+  notificar20Y('🎯 20Y OBJETIVO', `${obj.titulo} guardado. Meta: ${obj.meta}`, false, 'objetivos');
+}
+
+function cancelarObjetivo() {
+  document.getElementById('formObjetivo').classList.add('hidden');
+}
+
+function sumarProgreso(id, cantidad) {
+  const objs = getObjetivos();
+  const obj = objs.find(o => o.id === id);
+  if(!obj) return;
+  obj.actual = Math.min(obj.meta, obj.actual + cantidad);
+  setObjetivos(objs);
+  cargarObjetivos();
+  if(obj.actual >= obj.meta) {
+    const puntos = parseInt(localStorage.getItem('20y_puntos') || '0') + 10;
+    localStorage.setItem('20y_puntos', puntos);
+    let stability = parseInt((localStorage.getItem('20y_stability') || '0%').replace('%',''));
+    stability = Math.min(100, stability + 15);
+    localStorage.setItem('20y_stability', stability + '%');
+    notificar20Y('✅ 20Y COMPLETADO', `${obj.titulo} cazado. +10 puntos. Stability ${stability}%`, true, 'objetivos');
+    cargar();
+    checkNivel5();
+  }
+}
+
+function borrarObjetivo(id) {
+  if(!confirm('¿Borrar objetivo?')) return;
+  setObjetivos(getObjetivos().filter(o => o.id!== id));
+  cargarObjetivos();
+}
+
+function responderTest(si) {
+  if(si) {
+    const puntos = parseInt(localStorage.getItem('20y_puntos') || '0') + 5;
+    localStorage.setItem('20y_puntos', puntos);
+    let stability = parseInt((localStorage.getItem('20y_stability') || '0%').replace('%',''));
+    stability = Math.min(100, stability + 5);
+    localStorage.setItem('20y_stability', stability + '%');
+    cargar();
+    notificar20Y('⚡ 20Y TEST', `Acción clave ejecutada. +5 puntos. Stability ${stability}%`, false, 'objetivos');
+  } else {
+    notificar20Y('⏰ 20Y TEST', 'Revisión mañana. No falles 2 veces.', false, 'objetivos');
+  }
+}
+
+function activarNotificaciones() {
+  if(!('Notification' in window)) { alert('Navegador no soporta notificaciones'); return; }
+  Notification.requestPermission().then(perm => {
+    if(perm === 'granted') {
+      localStorage.setItem('20y_freq', document.getElementById('frecuencia').value);
+      document.getElementById('notifBtn').innerText = 'NOTIFICACIONES ACTIVAS';
+      notificar20Y('🔔 20Y SPITH', 'Notificaciones activadas. Nivel 4/5 operativo.', true, 'spith');
+    } else {
+      alert('Permiso denegado. Activa en ajustes de Chrome.');
+    }
+  });
+}
+
+function checkNotifStatus() {
+  if(Notification.permission === 'granted') {
+    document.getElementById('notifBtn').innerText = 'NOTIFICACIONES ACTIVAS';
+  }
+}
+
+function getEstadoUsuario() {
+  const objs = getObjetivos();
+  const puntos = parseInt(localStorage.getItem('20y_puntos') || '0');
+  const stability = parseInt((localStorage.getItem('20y_stability') || '0%').replace('%',''));
+  const nivel = localStorage.getItem('20y_nivel') || '4/5 TITÁN';
+  const racha = parseInt(localStorage.getItem('20y_racha') || '0');
+  
+  return {
+    nombre: localStorage.getItem('20y_name') || 'Samuel',
+    mision: localStorage.getItem('20y_mision') || 'Desbloquear Nivel 5',
+    nivel: nivel,
+    puntos: puntos,
+    stability: stability + '%',
+    racha: racha,
+    estado: localStorage.getItem('20y_estado') || 'Activo',
+    objCount: objs.length,
+    objCompletados: objs.filter(o => o.actual >= o.meta).length,
+    objPendientes: objs.filter(o => o.actual < o.meta).length,
+    objPrincipal: objs.find(o => o.actual < o.meta)?.titulo || 'Ninguno'
+  };
+}
+
+function generarSpithYa() {
+  const datos = getEstadoUsuario();
+  const template = spiths[Math.floor(Math.random() * spiths.length)];
+  const texto = template.replace(/{(\w+)}/g, (_, k) => datos[k] || '');
+  document.getElementById('spithBox').innerText = texto;
+  localStorage.setItem('20y_lastSpith', texto);
+  notificar20Y('⚡ 20Y SPITH', texto, true, 'spith');
+}
+
+function mostrarUltimoSpith() {
+  const ultimo = localStorage.getItem('20y_lastSpith');
+  if(ultimo) document.getElementById('spithBox').innerText = ultimo;
+}
+
+function actualizarKPIs() {
+  const objs = getObjetivos();
+  const puntos = localStorage.getItem('20y_puntos') || '0';
+  const completados = objs.filter(o => o.actual >= o.meta).length;
+  const racha = localStorage.getItem('20y_racha') || '0';
+  document.getElementById('resumenKPI').innerHTML = `
+    <div class="kpi"><span>Puntos 20Y:</span><strong>${puntos}</strong></div>
+    <div class="kpi"><span>Racha:</span><strong>${racha} días 🔥</strong></div>
+    <div class="kpi"><span>Objetivos activos:</span><strong>${objs.length}</strong></div>
+    <div class="kpi"><span>Completados:</span><strong>${completados}</strong></div>
+    <div class="kpi"><span>Stability:</span><strong>${localStorage.getItem('20y_stability') || '0%'}</strong></div>
+  `;
+}
+
+function generarOrdenEjecucion() {
+  const objs = getObjetivos().filter(o => o.actual < o.meta);
+  if(objs.length === 0) {
+    document.getElementById('textoOrden').innerText = 'Sin objetivos pendientes. Crea una misión o descansa.';
+    return;
+  }
+  const obj = objs[0];
+  const texto = `HOY: Avanza 1 unidad
