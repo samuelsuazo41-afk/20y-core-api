@@ -11,31 +11,31 @@
     body { background:#000; color:#0f0; font-family:monospace; padding:20px; margin:0; }
     h1 { text-align:center; color:#0f0; margin:10px 0; }
     h2 { margin:15px 0 10px 0; font-size:18px; }
-   .card { border:2px solid #0f0; padding:20px; margin:20px 0; border-radius:8px; }
+  .card { border:2px solid #0f0; padding:20px; margin:20px 0; border-radius:8px; }
     input,select,textarea { background:#111; border:1px solid #0f0; color:#0f0; padding:8px; width:100%; margin:5px 0; font-family:monospace; box-sizing:border-box; }
     button { background:#0f0; color:#000; border:none; padding:10px 20px; font-weight:bold; cursor:pointer; width:100%; margin-top:10px; }
     button:active { background:#0a0; }
     button.secondary { background:#333; color:#0f0; }
     button.danger { background:#500; color:#f00; }
     button.plan { background:#050; color:#0f0; border:1px solid #0f0; }
-   .row { display:flex; gap:10px; }
-   .row input,.row select { flex:1; }
-   .hidden { display:none; }
-   .spith { background:#001100; border-left:4px solid #0f0; padding:15px; margin:15px 0; font-style:italic; }
-   .objetivo { border:1px solid #0f0; padding:10px; margin:10px 0; border-radius:4px; }
-   .objetivo-header { display:flex; justify-content:space-between; align-items:center; }
-   .progress { background:#111; height:8px; border-radius:4px; margin:8px 0; }
-   .progress-bar { background:#0f0; height:100%; border-radius:4px; transition:width 0.3s; }
-   .tabs { display:flex; gap:5px; margin-bottom:15px; flex-wrap:wrap; }
-   .tab { flex:1; padding:8px; background:#111; border:1px solid #0f0; cursor:pointer; text-align:center; min-width:80px; }
-   .tab.active { background:#0f0; color:#000; font-weight:bold; }
-   .orden { background:#110000; border:2px solid #f00; padding:15px; margin:15px 0; }
-   .orden h3 { color:#f00; margin:0 0 10px 0; }
-   .planbox { background:#001a00; border:2px solid #0f0; padding:15px; margin:15px 0; }
-   .planbox h3 { color:#0f0; margin:0 0 10px 0; }
-   .planbox ol { margin:10px 0; padding-left:20px; }
-   .planbox li { margin:8px 0; }
-   .kpi { display:flex; justify-content:space-between; margin:8px 0; }
+  .row { display:flex; gap:10px; }
+  .row input,.row select { flex:1; }
+  .hidden { display:none; }
+  .spith { background:#001100; border-left:4px solid #0f0; padding:15px; margin:15px 0; font-style:italic; }
+  .objetivo { border:1px solid #0f0; padding:10px; margin:10px 0; border-radius:4px; }
+  .objetivo-header { display:flex; justify-content:space-between; align-items:center; }
+  .progress { background:#111; height:8px; border-radius:4px; margin:8px 0; }
+  .progress-bar { background:#0f0; height:100%; border-radius:4px; transition:width 0.3s; }
+  .tabs { display:flex; gap:5px; margin-bottom:15px; flex-wrap:wrap; }
+  .tab { flex:1; padding:8px; background:#111; border:1px solid #0f0; cursor:pointer; text-align:center; min-width:80px; }
+  .tab.active { background:#0f0; color:#000; font-weight:bold; }
+  .orden { background:#110000; border:2px solid #f00; padding:15px; margin:15px 0; }
+  .orden h3 { color:#f00; margin:0 0 10px 0; }
+  .planbox { background:#001a00; border:2px solid #0f0; padding:15px; margin:15px 0; }
+  .planbox h3 { color:#0f0; margin:0 0 10px 0; }
+  .planbox ol { margin:10px 0; padding-left:20px; }
+  .planbox li { margin:8px 0; }
+  .kpi { display:flex; justify-content:space-between; margin:8px 0; }
   </style>
 </head>
 <body>
@@ -322,4 +322,118 @@ function responderTest(si) {
     const puntos = parseInt(localStorage.getItem('20y_puntos') || '0') + 5;
     localStorage.setItem('20y_puntos', puntos);
     cargar();
-    notificar20Y('20Y TEST', 'Acción clave ejecutada. +5
+    notificar20Y('20Y TEST', 'Acción clave ejecutada. +5 puntos 20Y');
+  } else {
+    notificar20Y('20Y TEST', 'Revisión mañana. No falles 2 veces.');
+  }
+}
+
+function activarNotificaciones() {
+  if(!('Notification' in window)) { alert('Navegador no soporta notificaciones'); return; }
+  Notification.requestPermission().then(perm => {
+    if(perm === 'granted') {
+      localStorage.setItem('20y_freq', document.getElementById('frecuencia').value);
+      document.getElementById('notifBtn').innerText = 'NOTIFICACIONES ACTIVAS';
+      notificar20Y('20Y SPITH', 'Notificaciones activadas. Nivel 4/4 operativo.', true, 'spith');
+    } else {
+      alert('Permiso denegado. Activa en ajustes de Chrome.');
+    }
+  });
+}
+
+function checkNotifStatus() {
+  if(Notification.permission === 'granted') {
+    document.getElementById('notifBtn').innerText = 'NOTIFICACIONES ACTIVAS';
+  }
+}
+
+function generarSpithYa() {
+  const objs = getObjetivos();
+  const datos = {
+    nombre: localStorage.getItem('20y_name') || 'Samuel',
+    nivel: localStorage.getItem('20y_nivel') || '1/4',
+    puntos: localStorage.getItem('20y_puntos') || '0',
+    stability: localStorage.getItem('20y_stability') || '0%',
+    estado: localStorage.getItem('20y_estado') || 'Activo',
+    objCount: objs.length,
+    objCompletados: objs.filter(o => o.actual >= o.meta).length,
+    objPendientes: objs.filter(o => o.actual < o.meta).length,
+    objPrincipal: objs.find(o => o.actual < o.meta)?.titulo || 'Ninguno'
+  };
+  const template = spiths[Math.floor(Math.random() * spiths.length)];
+  const texto = template.replace(/{(\w+)}/g, (_, k) => datos[k] || '');
+  document.getElementById('spithBox').innerText = texto;
+  localStorage.setItem('20y_lastSpith', texto);
+  notificar20Y('20Y SPITH', texto, true, 'spith');
+}
+
+function mostrarUltimoSpith() {
+  const ultimo = localStorage.getItem('20y_lastSpith');
+  if(ultimo) document.getElementById('spithBox').innerText = ultimo;
+}
+
+function actualizarKPIs() {
+  const objs = getObjetivos();
+  const puntos = localStorage.getItem('20y_puntos') || '0';
+  const completados = objs.filter(o => o.actual >= o.meta).length;
+  document.getElementById('resumenKPI').innerHTML = `
+    <div class="kpi"><span>Puntos 20Y:</span><strong>${puntos}</strong></div>
+    <div class="kpi"><span>Objetivos activos:</span><strong>${objs.length}</strong></div>
+    <div class="kpi"><span>Completados:</span><strong>${completados}</strong></div>
+    <div class="kpi"><span>Stability:</span><strong>${localStorage.getItem('20y_stability') || '0%'}</strong></div>
+  `;
+}
+
+function generarOrdenEjecucion() {
+  const objs = getObjetivos().filter(o => o.actual < o.meta);
+  if(objs.length === 0) {
+    document.getElementById('textoOrden').innerText = 'Sin objetivos pendientes. Crea una misión o descansa.';
+    return;
+  }
+  const obj = objs[0];
+  const texto = `HOY: Avanza 1 unidad en "${obj.titulo}". Actual: ${obj.actual}/${obj.meta}. Categoría: ${obj.categoria}. No hay excusas.`;
+  document.getElementById('textoOrden').innerText = texto;
+  notificar20Y('20Y ORDEN', texto, true, 'ejecucion');
+}
+
+function generarPlanEstrategico() {
+  const objs = getObjetivos();
+  const pendientes = objs.filter(o => o.actual < o.meta);
+  if(pendientes.length === 0) {
+    document.getElementById('textoPlan').innerHTML = '<p>Sin objetivos pendientes. Define tu próxima guerra.</p>';
+    document.getElementById('planBox').classList.remove('hidden');
+    return;
+  }
+  const pasos = pendientes.slice(0,3).map((o,i) => `<li><strong>Paso ${i+1}:</strong> ${o.titulo} - Llevar de ${o.actual} a ${o.meta}. Razón: ${o.desc || 'Core 20Y'}</li>`).join('');
+  const plan = `<p>Enfoque 72h para subir Stability Score:</p><ol>${pasos}</ol><p>Ejecuta Paso 1 hoy. Sin distracciones.</p>`;
+  document.getElementById('textoPlan').innerHTML = plan;
+  document.getElementById('planBox').classList.remove('hidden');
+  notificar20Y('20Y PLAN', 'Plan estratégico generado. 3 pasos críticos definidos.', true, 'ejecucion');
+}
+
+function marcarOrdenCumplida() {
+  const puntos = parseInt(localStorage.getItem('20y_puntos') || '0') + 10;
+  localStorage.setItem('20y_puntos', puntos);
+  actualizarKPIs();
+  cargar();
+  notificar20Y('20Y ORDEN', 'Orden del día cumplida. +10 puntos 20Y. Stability sube.', true);
+}
+
+// === REGISTRO SERVICE WORKER V8 ===
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js?v=8')
+   .then(reg => console.log('20Y SW v8 registrado:', reg.scope))
+   .catch(err => console.log('20Y SW error:', err));
+  });
+}
+
+// Init
+window.addEventListener('load', () => {
+  cargar();
+  cargarObjetivos();
+  if(localStorage.getItem('20y_puntos') === null) localStorage.setItem('20y_puntos', '0');
+});
+</script>
+</body>
+</html>
