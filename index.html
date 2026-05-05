@@ -11,31 +11,36 @@
     body { background:#000; color:#0f0; font-family:monospace; padding:20px; margin:0; }
     h1 { text-align:center; color:#0f0; margin:10px 0; }
     h2 { margin:15px 0 10px 0; font-size:18px; }
-  .card { border:2px solid #0f0; padding:20px; margin:20px 0; border-radius:8px; }
+ .card { border:2px solid #0f0; padding:20px; margin:20px 0; border-radius:8px; }
     input,select,textarea { background:#111; border:1px solid #0f0; color:#0f0; padding:8px; width:100%; margin:5px 0; font-family:monospace; box-sizing:border-box; }
     button { background:#0f0; color:#000; border:none; padding:10px 20px; font-weight:bold; cursor:pointer; width:100%; margin-top:10px; }
     button:active { background:#0a0; }
     button.secondary { background:#333; color:#0f0; }
     button.danger { background:#500; color:#f00; }
     button.plan { background:#050; color:#0f0; border:1px solid #0f0; }
-  .row { display:flex; gap:10px; }
-  .row input,.row select { flex:1; }
-  .hidden { display:none; }
-  .spith { background:#001100; border-left:4px solid #0f0; padding:15px; margin:15px 0; font-style:italic; }
-  .objetivo { border:1px solid #0f0; padding:10px; margin:10px 0; border-radius:4px; }
-  .objetivo-header { display:flex; justify-content:space-between; align-items:center; }
-  .progress { background:#111; height:8px; border-radius:4px; margin:8px 0; }
-  .progress-bar { background:#0f0; height:100%; border-radius:4px; transition:width 0.3s; }
-  .tabs { display:flex; gap:5px; margin-bottom:15px; flex-wrap:wrap; }
-  .tab { flex:1; padding:8px; background:#111; border:1px solid #0f0; cursor:pointer; text-align:center; min-width:80px; }
-  .tab.active { background:#0f0; color:#000; font-weight:bold; }
-  .orden { background:#110000; border:2px solid #f00; padding:15px; margin:15px 0; }
-  .orden h3 { color:#f00; margin:0 0 10px 0; }
-  .planbox { background:#001a00; border:2px solid #0f0; padding:15px; margin:15px 0; }
-  .planbox h3 { color:#0f0; margin:0 0 10px 0; }
-  .planbox ol { margin:10px 0; padding-left:20px; }
-  .planbox li { margin:8px 0; }
-  .kpi { display:flex; justify-content:space-between; margin:8px 0; }
+    button.coach { background:#0a0; color:#000; border:1px solid #0f0; }
+ .row { display:flex; gap:10px; }
+ .row input,.row select { flex:1; }
+ .hidden { display:none; }
+ .spith { background:#001100; border-left:4px solid #0f0; padding:15px; margin:15px 0; font-style:italic; }
+ .coach-box { background:#001a00; border-left:4px solid #0a0; padding:15px; margin:15px 0; }
+ .coach-box h3 { color:#0a0; margin:0 0 10px 0; }
+ .objetivo { border:1px solid #0f0; padding:10px; margin:10px 0; border-radius:4px; }
+ .objetivo-header { display:flex; justify-content:space-between; align-items:center; }
+ .progress { background:#111; height:8px; border-radius:4px; margin:8px 0; }
+ .progress-bar { background:#0f0; height:100%; border-radius:4px; transition:width 0.3s; }
+ .tabs { display:flex; gap:5px; margin-bottom:15px; flex-wrap:wrap; }
+ .tab { flex:1; padding:8px; background:#111; border:1px solid #0f0; cursor:pointer; text-align:center; min-width:80px; }
+ .tab.active { background:#0f0; color:#000; font-weight:bold; }
+ .orden { background:#110000; border:2px solid #f00; padding:15px; margin:15px 0; }
+ .orden h3 { color:#f00; margin:0 0 10px 0; }
+ .planbox { background:#001a00; border:2px solid #0f0; padding:15px; margin:15px 0; }
+ .planbox h3 { color:#0f0; margin:0 0 10px 0; }
+ .planbox ol { margin:10px 0; padding-left:20px; }
+ .planbox li { margin:8px 0; }
+ .kpi { display:flex; justify-content:space-between; margin:8px 0; }
+ .historial { max-height:200px; overflow-y:auto; border:1px solid #0a0; padding:10px; margin-top:10px; }
+ .historial-item { border-bottom:1px solid #030; padding:8px 0; font-size:12px; }
   </style>
 </head>
 <body>
@@ -46,6 +51,7 @@
     <div class="tab active" onclick="showTab('objetivos')">OBJETIVOS</div>
     <div class="tab" onclick="showTab('spith')">SPITH</div>
     <div class="tab" onclick="showTab('ejecucion')">EJECUCIÓN</div>
+    <div class="tab" onclick="showTab('coach')">COACH</div>
   </div>
 
   <div class="card hidden" id="tab-usuario">
@@ -134,6 +140,22 @@
     <button class="secondary" onclick="marcarOrdenCumplida()">MARCAR ORDEN CUMPLIDA +10 PUNTOS</button>
   </div>
 
+  <div class="card hidden" id="tab-coach">
+    <h2>COACH 20Y PULSE</h2>
+    <div id="coachBox" class="coach-box">
+      <h3>🧠 CONSEJO TÁCTICO</h3>
+      <p id="textoCoach">Toca GENERAR CONSEJO para que el Cerebro 20Y analice tu estado.</p>
+    </div>
+    
+    <button class="coach" onclick="generarConsejoCoach()">GENERAR CONSEJO 20Y + NOTIFICAR</button>
+    <button class="secondary" onclick="borrarHistorialCoach()">BORRAR HISTORIAL</button>
+    
+    <h2 style="margin-top:20px;">HISTORIAL COACH</h2>
+    <div id="historialCoach" class="historial">
+      <p style="opacity:0.7">Sin consejos aún. Genera el primero.</p>
+    </div>
+  </div>
+
   <div style="text-align:center; margin-top:30px; opacity:0.7;">
     <p>20Y CORE SYSTEMS</p>
     <p style="font-size:12px;">SALT, GIRONA, SPAIN</p>
@@ -148,11 +170,29 @@ const spiths = [
   "Estado {estado}. {objPendientes} objetivos abiertos. {puntos} 20Y no caen del cielo."
 ];
 
+const consejosCoach = {
+  inicio: [
+    "Stability {stability} es crítico. Tu primera venta define el sistema. Hoy: 1 llamada a prospecto. Sin excusas.",
+    "Nivel {nivel} con {objPendientes} objetivos abiertos. Elige 1. Mata los demás. Focus = Fuerza.",
+    "Tienes {puntos} puntos pero 0 momentum. Acción mata ansiedad. Ejecuta +1 en '{objPrincipal}' AHORA."
+  ],
+  medio: [
+    "Stability {stability}. Ya no eres principiante. Sube el precio de '{objPrincipal}' 20%. Si no duele, no vale.",
+    "{objCompletados}/{objCount} cazados. Bien. Ahora duplica velocidad: 2 acciones clave antes de 14:00h.",
+    "Puntos {puntos} estancados = muerte lenta. Cierra 1 objetivo esta semana o bórralo. Decisión."
+  ],
+  alto: [
+    "Nivel {nivel}. Stability {stability}. Deja de operar, empieza a dirigir. Delega '{objPrincipal}' y crea sistema.",
+    "{puntos} 20Y. Ya probaste que funcionas. Próximo nivel: convierte 20Y PULSE en activo vendible. 72h.",
+    "Estado {estado} con {objPendientes} frentes. General no pelea todas las batallas. Elige el 20% que da 80%."
+  ]
+};
+
 function showTab(tab) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('[id^="tab-"]').forEach(t => t.classList.add('hidden'));
   document.querySelectorAll('.tab').forEach((t, i) => {
-    const tabs = ['usuario','objetivos','spith','ejecucion'];
+    const tabs = ['usuario','objetivos','spith','ejecucion','coach'];
     if(tabs[i] === tab) t.classList.add('active');
   });
   document.getElementById('tab-'+tab).classList.remove('hidden');
@@ -161,6 +201,7 @@ function showTab(tab) {
   if(tab === 'objetivos') cargarObjetivos();
   if(tab === 'spith') generarSpithYa();
   if(tab === 'ejecucion') { actualizarKPIs(); generarOrdenEjecucion(); }
+  if(tab === 'coach') cargarHistorialCoach();
 }
 
 function notificar20Y(titulo, mensaje, vibrar = false, tab = 'objetivos') {
@@ -184,256 +225,4 @@ function cargar() {
   document.getElementById('viewEstado').innerText = localStorage.getItem('20y_estado') || 'Activo';
   document.getElementById('viewPuntos').innerText = localStorage.getItem('20y_puntos') || '0';
   document.getElementById('viewNivel').innerText = localStorage.getItem('20y_nivel') || '1/4';
-  document.getElementById('viewStability').innerText = localStorage.getItem('20y_stability') || '0%';
-  document.getElementById('frecuencia').value = localStorage.getItem('20y_freq') || 'diario';
-  mostrarUltimoSpith();
-  checkNotifStatus();
-}
-
-function editarUsuario() {
-  document.getElementById('viewMode').classList.add('hidden');
-  document.getElementById('editMode').classList.remove('hidden');
-  document.getElementById('editName').value = localStorage.getItem('20y_name') || 'Samuel Suazo';
-  document.getElementById('editEstado').value = localStorage.getItem('20y_estado') || 'Activo';
-  document.getElementById('editPuntos').value = localStorage.getItem('20y_puntos') || '0';
-  document.getElementById('editNivel').value = localStorage.getItem('20y_nivel') || '1/4';
-  document.getElementById('editStability').value = localStorage.getItem('20y_stability') || '0%';
-}
-
-function guardarUsuario() {
-  localStorage.setItem('20y_name', document.getElementById('editName').value);
-  localStorage.setItem('20y_estado', document.getElementById('editEstado').value);
-  localStorage.setItem('20y_puntos', document.getElementById('editPuntos').value);
-  localStorage.setItem('20y_nivel', document.getElementById('editNivel').value);
-  localStorage.setItem('20y_stability', document.getElementById('editStability').value);
-  cancelarUsuario();
-  cargar();
-  notificar20Y('20Y USUARIO', 'Datos actualizados. Stability recalculada.');
-}
-
-function cancelarUsuario() {
-  document.getElementById('viewMode').classList.remove('hidden');
-  document.getElementById('editMode').classList.add('hidden');
-}
-
-function getObjetivos() {
-  return JSON.parse(localStorage.getItem('20y_objetivos') || '[]');
-}
-
-function setObjetivos(arr) {
-  localStorage.setItem('20y_objetivos', JSON.stringify(arr));
-}
-
-function cargarObjetivos() {
-  const lista = document.getElementById('listaObjetivos');
-  const objs = getObjetivos();
-  if(objs.length === 0) {
-    lista.innerHTML = '<p style="opacity:0.7">Sin objetivos. Crea el primero.</p>';
-    return;
-  }
-  lista.innerHTML = objs.map(o => {
-    const pct = Math.min(100, Math.round((o.actual / o.meta) * 100));
-    return `<div class="objetivo">
-      <div class="objetivo-header">
-        <strong>${o.titulo}</strong>
-        <span>${o.categoria}</span>
-      </div>
-      <div class="progress"><div class="progress-bar" style="width:${pct}%"></div></div>
-      <div class="row">
-        <button class="secondary" onclick="sumarProgreso('${o.id}',1)">+1</button>
-        <button class="secondary" onclick="editarObjetivo('${o.id}')">EDITAR</button>
-        <button class="danger" onclick="borrarObjetivo('${o.id}')">X</button>
-      </div>
-      <small>${o.actual}/${o.meta} - ${o.desc}</small>
-    </div>`;
-  }).join('');
-}
-
-function mostrarFormObjetivo() {
-  document.getElementById('formObjetivo').classList.remove('hidden');
-  document.getElementById('tituloFormObj').innerText = 'NUEVO OBJETIVO';
-  document.getElementById('objId').value = '';
-  document.getElementById('objTitulo').value = '';
-  document.getElementById('objDesc').value = '';
-  document.getElementById('objMeta').value = '1';
-  document.getElementById('objActual').value = '0';
-}
-
-function editarObjetivo(id) {
-  const obj = getObjetivos().find(o => o.id === id);
-  if(!obj) return;
-  document.getElementById('formObjetivo').classList.remove('hidden');
-  document.getElementById('tituloFormObj').innerText = 'EDITAR OBJETIVO';
-  document.getElementById('objId').value = obj.id;
-  document.getElementById('objTitulo').value = obj.titulo;
-  document.getElementById('objDesc').value = obj.desc;
-  document.getElementById('objMeta').value = obj.meta;
-  document.getElementById('objActual').value = obj.actual;
-  document.getElementById('objCategoria').value = obj.categoria;
-}
-
-function guardarObjetivo() {
-  const id = document.getElementById('objId').value || Date.now().toString();
-  const obj = {
-    id: id,
-    titulo: document.getElementById('objTitulo').value,
-    desc: document.getElementById('objDesc').value,
-    meta: parseInt(document.getElementById('objMeta').value) || 1,
-    actual: parseInt(document.getElementById('objActual').value) || 0,
-    categoria: document.getElementById('objCategoria').value
-  };
-  if(!obj.titulo) { alert('Título obligatorio'); return; }
-  const objs = getObjetivos();
-  const idx = objs.findIndex(o => o.id === id);
-  if(idx >= 0) objs[idx] = obj; else objs.push(obj);
-  setObjetivos(objs);
-  cancelarObjetivo();
-  cargarObjetivos();
-  notificar20Y('20Y OBJETIVO', `${obj.titulo} guardado. Meta: ${obj.meta}`);
-}
-
-function cancelarObjetivo() {
-  document.getElementById('formObjetivo').classList.add('hidden');
-}
-
-function sumarProgreso(id, cantidad) {
-  const objs = getObjetivos();
-  const obj = objs.find(o => o.id === id);
-  if(!obj) return;
-  obj.actual = Math.min(obj.meta, obj.actual + cantidad);
-  setObjetivos(objs);
-  cargarObjetivos();
-  if(obj.actual >= obj.meta) {
-    const puntos = parseInt(localStorage.getItem('20y_puntos') || '0') + 10;
-    localStorage.setItem('20y_puntos', puntos);
-    notificar20Y('20Y COMPLETADO', `${obj.titulo} cazado. +10 puntos 20Y`, true);
-    cargar();
-  }
-}
-
-function borrarObjetivo(id) {
-  if(!confirm('¿Borrar objetivo?')) return;
-  setObjetivos(getObjetivos().filter(o => o.id!== id));
-  cargarObjetivos();
-}
-
-function responderTest(si) {
-  if(si) {
-    const puntos = parseInt(localStorage.getItem('20y_puntos') || '0') + 5;
-    localStorage.setItem('20y_puntos', puntos);
-    cargar();
-    notificar20Y('20Y TEST', 'Acción clave ejecutada. +5 puntos 20Y');
-  } else {
-    notificar20Y('20Y TEST', 'Revisión mañana. No falles 2 veces.');
-  }
-}
-
-function activarNotificaciones() {
-  if(!('Notification' in window)) { alert('Navegador no soporta notificaciones'); return; }
-  Notification.requestPermission().then(perm => {
-    if(perm === 'granted') {
-      localStorage.setItem('20y_freq', document.getElementById('frecuencia').value);
-      document.getElementById('notifBtn').innerText = 'NOTIFICACIONES ACTIVAS';
-      notificar20Y('20Y SPITH', 'Notificaciones activadas. Nivel 4/4 operativo.', true, 'spith');
-    } else {
-      alert('Permiso denegado. Activa en ajustes de Chrome.');
-    }
-  });
-}
-
-function checkNotifStatus() {
-  if(Notification.permission === 'granted') {
-    document.getElementById('notifBtn').innerText = 'NOTIFICACIONES ACTIVAS';
-  }
-}
-
-function generarSpithYa() {
-  const objs = getObjetivos();
-  const datos = {
-    nombre: localStorage.getItem('20y_name') || 'Samuel',
-    nivel: localStorage.getItem('20y_nivel') || '1/4',
-    puntos: localStorage.getItem('20y_puntos') || '0',
-    stability: localStorage.getItem('20y_stability') || '0%',
-    estado: localStorage.getItem('20y_estado') || 'Activo',
-    objCount: objs.length,
-    objCompletados: objs.filter(o => o.actual >= o.meta).length,
-    objPendientes: objs.filter(o => o.actual < o.meta).length,
-    objPrincipal: objs.find(o => o.actual < o.meta)?.titulo || 'Ninguno'
-  };
-  const template = spiths[Math.floor(Math.random() * spiths.length)];
-  const texto = template.replace(/{(\w+)}/g, (_, k) => datos[k] || '');
-  document.getElementById('spithBox').innerText = texto;
-  localStorage.setItem('20y_lastSpith', texto);
-  notificar20Y('20Y SPITH', texto, true, 'spith');
-}
-
-function mostrarUltimoSpith() {
-  const ultimo = localStorage.getItem('20y_lastSpith');
-  if(ultimo) document.getElementById('spithBox').innerText = ultimo;
-}
-
-function actualizarKPIs() {
-  const objs = getObjetivos();
-  const puntos = localStorage.getItem('20y_puntos') || '0';
-  const completados = objs.filter(o => o.actual >= o.meta).length;
-  document.getElementById('resumenKPI').innerHTML = `
-    <div class="kpi"><span>Puntos 20Y:</span><strong>${puntos}</strong></div>
-    <div class="kpi"><span>Objetivos activos:</span><strong>${objs.length}</strong></div>
-    <div class="kpi"><span>Completados:</span><strong>${completados}</strong></div>
-    <div class="kpi"><span>Stability:</span><strong>${localStorage.getItem('20y_stability') || '0%'}</strong></div>
-  `;
-}
-
-function generarOrdenEjecucion() {
-  const objs = getObjetivos().filter(o => o.actual < o.meta);
-  if(objs.length === 0) {
-    document.getElementById('textoOrden').innerText = 'Sin objetivos pendientes. Crea una misión o descansa.';
-    return;
-  }
-  const obj = objs[0];
-  const texto = `HOY: Avanza 1 unidad en "${obj.titulo}". Actual: ${obj.actual}/${obj.meta}. Categoría: ${obj.categoria}. No hay excusas.`;
-  document.getElementById('textoOrden').innerText = texto;
-  notificar20Y('20Y ORDEN', texto, true, 'ejecucion');
-}
-
-function generarPlanEstrategico() {
-  const objs = getObjetivos();
-  const pendientes = objs.filter(o => o.actual < o.meta);
-  if(pendientes.length === 0) {
-    document.getElementById('textoPlan').innerHTML = '<p>Sin objetivos pendientes. Define tu próxima guerra.</p>';
-    document.getElementById('planBox').classList.remove('hidden');
-    return;
-  }
-  const pasos = pendientes.slice(0,3).map((o,i) => `<li><strong>Paso ${i+1}:</strong> ${o.titulo} - Llevar de ${o.actual} a ${o.meta}. Razón: ${o.desc || 'Core 20Y'}</li>`).join('');
-  const plan = `<p>Enfoque 72h para subir Stability Score:</p><ol>${pasos}</ol><p>Ejecuta Paso 1 hoy. Sin distracciones.</p>`;
-  document.getElementById('textoPlan').innerHTML = plan;
-  document.getElementById('planBox').classList.remove('hidden');
-  notificar20Y('20Y PLAN', 'Plan estratégico generado. 3 pasos críticos definidos.', true, 'ejecucion');
-}
-
-function marcarOrdenCumplida() {
-  const puntos = parseInt(localStorage.getItem('20y_puntos') || '0') + 10;
-  localStorage.setItem('20y_puntos', puntos);
-  actualizarKPIs();
-  cargar();
-  notificar20Y('20Y ORDEN', 'Orden del día cumplida. +10 puntos 20Y. Stability sube.', true);
-}
-
-// === REGISTRO SERVICE WORKER V8 ===
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/service-worker.js?v=8')
-   .then(reg => console.log('20Y SW v8 registrado:', reg.scope))
-   .catch(err => console.log('20Y SW error:', err));
-  });
-}
-
-// Init
-window.addEventListener('load', () => {
-  cargar();
-  cargarObjetivos();
-  if(localStorage.getItem('20y_puntos') === null) localStorage.setItem('20y_puntos', '0');
-});
-</script>
-</body>
-</html>
+  document.getElementById('viewStability').innerText = localStorage.getItem('20y_stability') || '
