@@ -4,33 +4,33 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>20Y PULSE</title>
-  <link rel="manifest" href="manifest.json?v=4">
+  <link rel="manifest" href="manifest.json?v=5">
   <meta name="theme-color" content="#00FF00">
   <link rel="icon" href="icon-192.png">
   <style>
     body { background:#000; color:#0f0; font-family:monospace; padding:20px; margin:0; }
     h1 { text-align:center; color:#0f0; margin:10px 0; }
     h2 { margin:15px 0 10px 0; font-size:18px; }
-    .card { border:2px solid #0f0; padding:20px; margin:20px 0; border-radius:8px; }
+  .card { border:2px solid #0f0; padding:20px; margin:20px 0; border-radius:8px; }
     input,select,textarea { background:#111; border:1px solid #0f0; color:#0f0; padding:8px; width:100%; margin:5px 0; font-family:monospace; box-sizing:border-box; }
     button { background:#0f0; color:#000; border:none; padding:10px 20px; font-weight:bold; cursor:pointer; width:100%; margin-top:10px; }
     button:active { background:#0a0; }
     button.secondary { background:#333; color:#0f0; }
     button.danger { background:#500; color:#f00; }
-    .row { display:flex; gap:10px; }
-    .row input,.row select { flex:1; }
-    .hidden { display:none; }
-    .spith { background:#001100; border-left:4px solid #0f0; padding:15px; margin:15px 0; font-style:italic; }
-    .objetivo { border:1px solid #0f0; padding:10px; margin:10px 0; border-radius:4px; }
-    .objetivo-header { display:flex; justify-content:space-between; align-items:center; }
-    .progress { background:#111; height:8px; border-radius:4px; margin:8px 0; }
-    .progress-bar { background:#0f0; height:100%; border-radius:4px; transition:width 0.3s; }
-    .tabs { display:flex; gap:5px; margin-bottom:15px; flex-wrap:wrap; }
-    .tab { flex:1; padding:8px; background:#111; border:1px solid #0f0; cursor:pointer; text-align:center; min-width:80px; }
-    .tab.active { background:#0f0; color:#000; font-weight:bold; }
-    .orden { background:#110000; border:2px solid #f00; padding:15px; margin:15px 0; }
-    .orden h3 { color:#f00; margin:0 0 10px 0; }
-    .kpi { display:flex; justify-content:space-between; margin:8px 0; }
+  .row { display:flex; gap:10px; }
+  .row input,.row select { flex:1; }
+  .hidden { display:none; }
+  .spith { background:#001100; border-left:4px solid #0f0; padding:15px; margin:15px 0; font-style:italic; }
+  .objetivo { border:1px solid #0f0; padding:10px; margin:10px 0; border-radius:4px; }
+  .objetivo-header { display:flex; justify-content:space-between; align-items:center; }
+  .progress { background:#111; height:8px; border-radius:4px; margin:8px 0; }
+  .progress-bar { background:#0f0; height:100%; border-radius:4px; transition:width 0.3s; }
+  .tabs { display:flex; gap:5px; margin-bottom:15px; flex-wrap:wrap; }
+  .tab { flex:1; padding:8px; background:#111; border:1px solid #0f0; cursor:pointer; text-align:center; min-width:80px; }
+  .tab.active { background:#0f0; color:#000; font-weight:bold; }
+  .orden { background:#110000; border:2px solid #f00; padding:15px; margin:15px 0; }
+  .orden h3 { color:#f00; margin:0 0 10px 0; }
+  .kpi { display:flex; justify-content:space-between; margin:8px 0; }
   </style>
 </head>
 <body>
@@ -124,4 +124,238 @@
   <div style="text-align:center; margin-top:30px; opacity:0.7;">
     <p>20Y CORE SYSTEMS</p>
     <p style="font-size:12px;">SALT, GIRONA, SPAIN</p>
- 
+  </div>
+
+<script>
+const spiths = [
+  "Nivel {nivel}. {puntos} 20Y. Stability {stability}. {objCount} misiones activas. Ejecuta.",
+  "{nombre}, {objCompletados}/{objCount} cazados. {puntos} 20Y. No pares ahora.",
+  "Stability {stability}. {puntos} 20Y. Target: {objPrincipal}. Nivel {nivel} exige sangre.",
+  "20Y PULSE: {objCompletados} objetivos eliminados. {puntos} puntos. Sube el standard o muere.",
+  "Estado {estado}. {objPendientes} objetivos abiertos. {puntos} 20Y no caen del cielo."
+];
+
+function showTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('[id^="tab-"]').forEach(t => t.classList.add('hidden'));
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    const tabs = ['usuario','objetivos','spith','ejecucion'];
+    if(tabs[i] === tab) t.classList.add('active');
+  });
+  document.getElementById('tab-'+tab).classList.remove('hidden');
+  if(tab === 'ejecucion') actualizarKPIs();
+}
+
+function notificar20Y(titulo, mensaje, vibrar = false, tab = 'objetivos') {
+  if (Notification.permission === 'granted') {
+    navigator.serviceWorker.ready.then(reg => {
+      reg.showNotification(titulo, {
+        body: mensaje,
+        icon: 'icon-192.png',
+        badge: 'icon-192.png',
+        tag: '20y-pulse',
+        vibrate: vibrar? [200,100,200] : [],
+        requireInteraction: true,
+        data: { tab: tab }
+      });
+    });
+  }
+}
+
+function cargar() {
+  document.getElementById('viewName').innerText = localStorage.getItem('20y_name') || 'Samuel Suazo';
+  document.getElementById('viewEstado').innerText = localStorage.getItem('20y_estado') || 'Activo';
+  document.getElementById('viewPuntos').innerText = localStorage.getItem('20y_puntos') || '127';
+  document.getElementById('viewNivel').innerText = localStorage.getItem('20y_nivel') || '4/4';
+  document.getElementById('viewStability').innerText = localStorage.getItem('20y_stability') || '98%';
+  document.getElementById('frecuencia').value = localStorage.getItem('20y_freq') || 'diario';
+  mostrarUltimoSpith();
+  checkNotifStatus();
+  cargarObjetivos();
+}
+
+function editarUsuario() {
+  document.getElementById('editName').value = localStorage.getItem('20y_name') || '';
+  document.getElementById('editEstado').value = localStorage.getItem('20y_estado') || '';
+  document.getElementById('editPuntos').value = localStorage.getItem('20y_puntos') || '';
+  document.getElementById('editNivel').value = localStorage.getItem('20y_nivel') || '';
+  document.getElementById('editStability').value = localStorage.getItem('20y_stability') || '';
+  document.getElementById('viewMode').classList.add('hidden');
+  document.getElementById('editMode').classList.remove('hidden');
+}
+
+function guardarUsuario() {
+  localStorage.setItem('20y_name', document.getElementById('editName').value);
+  localStorage.setItem('20y_estado', document.getElementById('editEstado').value);
+  localStorage.setItem('20y_puntos', document.getElementById('editPuntos').value);
+  localStorage.setItem('20y_nivel', document.getElementById('editNivel').value);
+  localStorage.setItem('20y_stability', document.getElementById('editStability').value);
+  cargar();
+  document.getElementById('editMode').classList.add('hidden');
+  document.getElementById('viewMode').classList.remove('hidden');
+  notificar20Y('20Y PERFIL', 'Datos sincronizados. Nivel 4/4 sigue operativo.', false, 'usuario');
+}
+
+function cancelarUsuario() {
+  document.getElementById('editMode').classList.add('hidden');
+  document.getElementById('viewMode').classList.remove('hidden');
+}
+
+function getObjetivos() {
+  return JSON.parse(localStorage.getItem('20y_objetivos') || '[]');
+}
+
+function setObjetivos(arr) {
+  localStorage.setItem('20y_objetivos', JSON.stringify(arr));
+  cargarObjetivos();
+}
+
+function cargarObjetivos() {
+  const objs = getObjetivos();
+  const cont = document.getElementById('listaObjetivos');
+  if (objs.length === 0) {
+    cont.innerHTML = '<p style="opacity:0.6;">Sin objetivos. Nivel 4/4 no espera. Crea uno.</p>';
+    return;
+  }
+  cont.innerHTML = objs.map(o => {
+    const prog = Math.min(100, Math.round((o.actual / o.meta) * 100));
+    return `
+      <div class="objetivo">
+        <div class="objetivo-header">
+          <strong>${o.titulo}</strong>
+          <span>${o.categoria}</span>
+        </div>
+        <p style="margin:5px 0; font-size:12px; opacity:0.8;">${o.desc}</p>
+        <div class="progress"><div class="progress-bar" style="width:${prog}%"></div></div>
+        <div class="row">
+          <span>${o.actual}/${o.meta} - ${prog}%</span>
+          <button class="secondary" style="flex:1; margin:0;" onclick="editarObjetivo('${o.id}')">EDITAR</button>
+          <button class="danger" style="flex:1; margin:0;" onclick="borrarObjetivo('${o.id}')">X</button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function mostrarFormObjetivo() {
+  document.getElementById('tituloFormObj').innerText = 'NUEVO OBJETIVO';
+  document.getElementById('objId').value = '';
+  document.getElementById('objTitulo').value = '';
+  document.getElementById('objDesc').value = '';
+  document.getElementById('objMeta').value = '';
+  document.getElementById('objActual').value = '';
+  document.getElementById('objCategoria').value = 'Personal';
+  document.getElementById('formObjetivo').classList.remove('hidden');
+  document.getElementById('formObjetivo').scrollIntoView({behavior: 'smooth'});
+}
+
+function editarObjetivo(id) {
+  const o = getObjetivos().find(x => x.id === id);
+  if(!o) return;
+  document.getElementById('tituloFormObj').innerText = 'EDITAR OBJETIVO';
+  document.getElementById('objId').value = o.id;
+  document.getElementById('objTitulo').value = o.titulo;
+  document.getElementById('objDesc').value = o.desc;
+  document.getElementById('objMeta').value = o.meta;
+  document.getElementById('objActual').value = o.actual;
+  document.getElementById('objCategoria').value = o.categoria;
+  document.getElementById('formObjetivo').classList.remove('hidden');
+  document.getElementById('formObjetivo').scrollIntoView({behavior: 'smooth'});
+}
+
+function guardarObjetivo() {
+  const id = document.getElementById('objId').value || Date.now().toString();
+  const titulo = document.getElementById('objTitulo').value.trim();
+  if(!titulo) {
+    alert('Pon un título al objetivo Nivel 4/4');
+    return;
+  }
+  const meta = parseInt(document.getElementById('objMeta').value) || 1;
+  const actual = parseInt(document.getElementById('objActual').value) || 0;
+  const esNuevo =!document.getElementById('objId').value;
+  const objAnterior = getObjetivos().find(o => o.id === id);
+  const estabaCompleto = objAnterior? objAnterior.actual >= objAnterior.meta : false;
+  
+  const obj = {
+    id, titulo,
+    desc: document.getElementById('objDesc').value,
+    meta, actual,
+    categoria: document.getElementById('objCategoria').value
+  };
+  
+  const objs = getObjetivos().filter(o => o.id!== id);
+  objs.push(obj);
+  setObjetivos(objs);
+  cancelarObjetivo();
+
+  let tituloNotif = '20Y OBJETIVO';
+  let msg = '';
+  let vibrar = false;
+  
+  if (esNuevo) {
+    msg = `MISIÓN NUEVA: ${titulo}. Meta ${meta}. Nivel 4/4 activado.`;
+  } else if (actual >= meta &&!estabaCompleto) {
+    msg = `OBJETIVO CAZADO: ${titulo}. 100%. +20 Puntos 20Y acreditados.`;
+    tituloNotif = '20Y COMPLETADO';
+    vibrar = true;
+    let puntos = parseInt(localStorage.getItem('20y_puntos') || '0');
+    puntos += 20;
+    localStorage.setItem('20y_puntos', puntos);
+    cargar();
+  } else {
+    msg = `PROGRESO: ${titulo} ${actual}/${meta}. Sigue atacando.`;
+  }
+  notificar20Y(tituloNotif, msg, vibrar, 'objetivos');
+}
+
+function borrarObjetivo(id) {
+  if (confirm('¿Eliminar objetivo 20Y?')) {
+    const obj = getObjetivos().find(o => o.id === id);
+    setObjetivos(getObjetivos().filter(o => o.id!== id));
+    notificar20Y('20Y ABORTADO', `Misión cancelada: ${obj.titulo}. Enfócate.`, false, 'objetivos');
+  }
+}
+
+function cancelarObjetivo() {
+  document.getElementById('formObjetivo').classList.add('hidden');
+}
+
+function responderTest(si) {
+  if (si) {
+    let puntos = parseInt(localStorage.getItem('20y_puntos') || '0');
+    puntos += 5;
+    localStorage.setItem('20y_puntos', puntos);
+    cargar();
+    notificar20Y('20Y DISCIPLINA', `+5 Puntos. Consistencia = poder. Total: ${puntos}`, false, 'objetivos');
+  }
+  const preguntas = [
+    '¿Ejecutaste tu acción clave antes de las 12:00h?',
+    '¿Eliminaste 1 distracción hoy?',
+    '¿Avanzaste en tu objetivo 20Y Core?',
+    '¿Tu Stability Score subió esta semana?'
+  ];
+  document.getElementById('preguntaTest').innerText = preguntas[Math.floor(Math.random() * preguntas.length)];
+}
+
+function generarTextoSpith() {
+  const objs = getObjetivos();
+  const objCompletados = objs.filter(o => o.actual >= o.meta).length;
+  const objPrincipal = objs.length > 0? objs[0].titulo : 'Ninguno';
+  const data = {
+    nombre: localStorage.getItem('20y_name') || 'Samuel',
+    estado: localStorage.getItem('20y_estado') || 'Activo',
+    puntos: localStorage.getItem('20y_puntos') || '0',
+    nivel: localStorage.getItem('20y_nivel') || '1/4',
+    stability: localStorage.getItem('20y_stability') || '0%',
+    objCount: objs.length,
+    objCompletados,
+    objPendientes: objs.length - objCompletados,
+    objPrincipal
+  };
+  let template = spiths[Math.floor(Math.random() * spiths.length)];
+  return template.replace(/{(\w+)}/g, (_, key) => data[key]);
+}
+
+function generarSpithYa() {
+  const spith = generarTextoSpith();
+  document.getElementById('spithBox').innerText = spith;
+  localStorage.setItem('20y_lastSpith', spith);
