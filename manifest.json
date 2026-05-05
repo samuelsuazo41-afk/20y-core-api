@@ -1,7 +1,6 @@
 {
   "name": "20Y PULSE",
   "short_name": "20Y",
-  "id": "/",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
