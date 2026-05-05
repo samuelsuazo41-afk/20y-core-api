@@ -4,33 +4,38 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>20Y PULSE</title>
-  <link rel="manifest" href="manifest.json?v=7">
+  <link rel="manifest" href="manifest.json?v=8">
   <meta name="theme-color" content="#00FF00">
   <link rel="icon" href="icon-192.png">
   <style>
     body { background:#000; color:#0f0; font-family:monospace; padding:20px; margin:0; }
     h1 { text-align:center; color:#0f0; margin:10px 0; }
     h2 { margin:15px 0 10px 0; font-size:18px; }
- .card { border:2px solid #0f0; padding:20px; margin:20px 0; border-radius:8px; }
+.card { border:2px solid #0f0; padding:20px; margin:20px 0; border-radius:8px; }
     input,select,textarea { background:#111; border:1px solid #0f0; color:#0f0; padding:8px; width:100%; margin:5px 0; font-family:monospace; box-sizing:border-box; }
     button { background:#0f0; color:#000; border:none; padding:10px 20px; font-weight:bold; cursor:pointer; width:100%; margin-top:10px; }
     button:active { background:#0a0; }
     button.secondary { background:#333; color:#0f0; }
     button.danger { background:#500; color:#f00; }
- .row { display:flex; gap:10px; }
- .row input,.row select { flex:1; }
- .hidden { display:none; }
- .spith { background:#001100; border-left:4px solid #0f0; padding:15px; margin:15px 0; font-style:italic; }
- .objetivo { border:1px solid #0f0; padding:10px; margin:10px 0; border-radius:4px; }
- .objetivo-header { display:flex; justify-content:space-between; align-items:center; }
- .progress { background:#111; height:8px; border-radius:4px; margin:8px 0; }
- .progress-bar { background:#0f0; height:100%; border-radius:4px; transition:width 0.3s; }
- .tabs { display:flex; gap:5px; margin-bottom:15px; flex-wrap:wrap; }
- .tab { flex:1; padding:8px; background:#111; border:1px solid #0f0; cursor:pointer; text-align:center; min-width:80px; }
- .tab.active { background:#0f0; color:#000; font-weight:bold; }
- .orden { background:#110000; border:2px solid #f00; padding:15px; margin:15px 0; }
- .orden h3 { color:#f00; margin:0 0 10px 0; }
- .kpi { display:flex; justify-content:space-between; margin:8px 0; }
+    button.plan { background:#050; color:#0f0; border:1px solid #0f0; }
+.row { display:flex; gap:10px; }
+.row input,.row select { flex:1; }
+.hidden { display:none; }
+.spith { background:#001100; border-left:4px solid #0f0; padding:15px; margin:15px 0; font-style:italic; }
+.objetivo { border:1px solid #0f0; padding:10px; margin:10px 0; border-radius:4px; }
+.objetivo-header { display:flex; justify-content:space-between; align-items:center; }
+.progress { background:#111; height:8px; border-radius:4px; margin:8px 0; }
+.progress-bar { background:#0f0; height:100%; border-radius:4px; transition:width 0.3s; }
+.tabs { display:flex; gap:5px; margin-bottom:15px; flex-wrap:wrap; }
+.tab { flex:1; padding:8px; background:#111; border:1px solid #0f0; cursor:pointer; text-align:center; min-width:80px; }
+.tab.active { background:#0f0; color:#000; font-weight:bold; }
+.orden { background:#110000; border:2px solid #f00; padding:15px; margin:15px 0; }
+.orden h3 { color:#f00; margin:0 0 10px 0; }
+.planbox { background:#001a00; border:2px solid #0f0; padding:15px; margin:15px 0; }
+.planbox h3 { color:#0f0; margin:0 0 10px 0; }
+.planbox ol { margin:10px 0; padding-left:20px; }
+.planbox li { margin:8px 0; }
+.kpi { display:flex; justify-content:space-between; margin:8px 0; }
   </style>
 </head>
 <body>
@@ -48,9 +53,9 @@
       <h2>MENÚ USUARIO</h2>
       <p><strong>Nombre:</strong> <span id="viewName">Samuel Suazo</span></p>
       <p><strong>Estado:</strong> <span id="viewEstado">Activo</span></p>
-      <p><strong>Puntos 20Y:</strong> <span id="viewPuntos">127</span></p>
-      <p><strong>Nivel:</strong> <span id="viewNivel">4/4</span></p>
-      <p><strong>Stability Score:</strong> <span id="viewStability">98%</span></p>
+      <p><strong>Puntos 20Y:</strong> <span id="viewPuntos">0</span></p>
+      <p><strong>Nivel:</strong> <span id="viewNivel">1/4</span></p>
+      <p><strong>Stability Score:</strong> <span id="viewStability">0%</span></p>
       <button onclick="editarUsuario()">EDITAR DATOS</button>
     </div>
     <div id="editMode" class="hidden">
@@ -113,11 +118,19 @@
   <div class="card hidden" id="tab-ejecucion">
     <h2>ORDEN DE EJECUCIÓN 20Y</h2>
     <div id="resumenKPI"></div>
+    
+    <div id="planBox" class="planbox hidden">
+      <h3>📋 PLAN ESTRATÉGICO 20Y</h3>
+      <div id="textoPlan"></div>
+    </div>
+
     <div id="ordenBox" class="orden">
       <h3>⚡ORDEN DEL DÍA</h3>
       <p id="textoOrden">Genera tu orden para ver la misión crítica de hoy.</p>
     </div>
+    
     <button onclick="generarOrdenEjecucion()">GENERAR ORDEN DE EJECUCIÓN</button>
+    <button class="plan" onclick="generarPlanEstrategico()">GENERAR PLAN ESTRATÉGICO</button>
     <button class="secondary" onclick="marcarOrdenCumplida()">MARCAR ORDEN CUMPLIDA +10 PUNTOS</button>
   </div>
 
@@ -144,20 +157,10 @@ function showTab(tab) {
   });
   document.getElementById('tab-'+tab).classList.remove('hidden');
   
-  // AUTO-DESPLIEGA FORMULARIOS AL ENTRAR A CADA TAB
-  if(tab === 'usuario') {
-    editarUsuario();
-  }
-  if(tab === 'objetivos') {
-    mostrarFormObjetivo();
-  }
-  if(tab === 'spith') {
-    generarSpithYa();
-  }
-  if(tab === 'ejecucion') {
-    actualizarKPIs();
-    generarOrdenEjecucion();
-  }
+  if(tab === 'usuario') editarUsuario();
+  if(tab === 'objetivos') mostrarFormObjetivo();
+  if(tab === 'spith') generarSpithYa();
+  if(tab === 'ejecucion') { actualizarKPIs(); generarOrdenEjecucion(); }
 }
 
 function notificar20Y(titulo, mensaje, vibrar = false, tab = 'objetivos') {
@@ -179,9 +182,9 @@ function notificar20Y(titulo, mensaje, vibrar = false, tab = 'objetivos') {
 function cargar() {
   document.getElementById('viewName').innerText = localStorage.getItem('20y_name') || 'Samuel Suazo';
   document.getElementById('viewEstado').innerText = localStorage.getItem('20y_estado') || 'Activo';
-  document.getElementById('viewPuntos').innerText = localStorage.getItem('20y_puntos') || '127';
-  document.getElementById('viewNivel').innerText = localStorage.getItem('20y_nivel') || '4/4';
-  document.getElementById('viewStability').innerText = localStorage.getItem('20y_stability') || '98%';
+  document.getElementById('viewPuntos').innerText = localStorage.getItem('20y_puntos') || '0';
+  document.getElementById('viewNivel').innerText = localStorage.getItem('20y_nivel') || '1/4';
+  document.getElementById('viewStability').innerText = localStorage.getItem('20y_stability') || '0%';
   document.getElementById('frecuencia').value = localStorage.getItem('20y_freq') || 'diario';
   mostrarUltimoSpith();
   checkNotifStatus();
@@ -416,96 +419,4 @@ function actualizarKPIs() {
     <div class="kpi"><span>Puntos:</span><strong>${puntos}</strong></div>
     <div class="kpi"><span>Stability:</span><strong>${stability}</strong></div>
     <div class="kpi"><span>Objetivos:</span><strong>${completados}/${objs.length}</strong></div>
-    <div class="kpi"><span>Progreso Total:</span><strong>${progresoTotal}%</strong></div>
-  `;
-}
-
-function generarOrdenEjecucion() {
-  const objs = getObjetivos();
-  const puntos = parseInt(localStorage.getItem('20y_puntos') || '0');
-  const stability = parseInt((localStorage.getItem('20y_stability') || '0%').replace('%',''));
-  const nivel = localStorage.getItem('20y_nivel') || '1/4';
-  
-  if(objs.length === 0) {
-    document.getElementById('textoOrden').innerText = 'SIN OBJETIVOS = SIN ORDEN. Nivel 4/4 exige targets. Crea 1 objetivo Core ahora.';
-    notificar20Y('20Y EJECUCIÓN', 'SIN OBJETIVOS. Crea tu primera misión Core para recibir órdenes.', true, 'ejecucion');
-    return;
-  }
-  
-  const objsPendientes = objs.filter(o => o.actual < o.meta);
-  objsPendientes.sort((a,b) => {
-    const progA = a.actual/a.meta;
-    const progB = b.actual/b.meta;
-    if(a.categoria === '20Y Core' && b.categoria!== '20Y Core') return -1;
-    if(b.categoria === '20Y Core' && a.categoria!== '20Y Core') return 1;
-    return progA - progB;
-  });
-  
-  const objetivoCritico = objsPendientes[0] || objs[0];
-  const progCritico = Math.round((objetivoCritico.actual / objetivoCritico.meta) * 100);
-  const falta = objetivoCritico.meta - objetivoCritico.actual;
-  
-  let orden = '';
-  let urgencia = '';
-  
-  if(stability < 80) {
-    urgencia = 'CRÍTICA';
-    orden = `STABILITY ${stability}% = RIESGO. Orden: Ejecuta 1 acción de ${objetivoCritico.titulo} ANTES de 12:00h. Sube 1 punto a ${objetivoCritico.actual + 1}/${objetivoCritico.meta}. Stability cae = Nivel 4/4 cae.`;
-  } else if(progCritico < 25) {
-    urgencia = 'ALTA';
-    orden = `MISIÓN ${objetivoCritico.titulo} EN ROJO ${progCritico}%. Orden: Bloquea 90min HOY. Avanza ${Math.min(3,falta)} puntos. Sin excusas.`;
-  } else if(progCritico < 75) {
-    urgencia = 'MEDIA';
-    orden = `OBJETIVO ${objetivoCritico.titulo} AL ${progCritico}%. Orden: 1 acción concreta HOY. Cierra en ${objetivoCritico.actual + 1}/${objetivoCritico.meta}. Momentum = victoria.`;
-  } else {
-    urgencia = 'CIERRE';
-    orden = `${objetivoCritico.titulo} AL ${progCritico}%. Orden: CAZA EL OBJETIVO HOY. Solo faltan ${falta}. +20 Puntos 20Y al completar.`;
-  }
-  
-  const textoCompleto = `URGENCIA ${urgencia} | Nivel ${nivel} | ${puntos} Puntos\n\n${orden}\n\nStability: ${stability}%. Reporta al cumplir.`;
-  document.getElementById('textoOrden').innerText = textoCompleto;
-  localStorage.setItem('20y_ordenActual', orden);
-  notificar20Y('⚡ORDEN DE EJECUCIÓN', orden, true, 'ejecucion');
-}
-
-function marcarOrdenCumplida() {
-  const orden = localStorage.getItem('20y_ordenActual');
-  if(!orden) {
-    notificar20Y('20Y EJECUCIÓN', 'Genera una orden primero. Nivel 4/4 no improvisa.', false, 'ejecucion');
-    return;
-  }
-  let puntos = parseInt(localStorage.getItem('20y_puntos') || '0');
-  puntos += 10;
-  localStorage.setItem('20y_puntos', puntos);
-  localStorage.removeItem('20y_ordenActual');
-  cargar();
-  document.getElementById('textoOrden').innerText = 'ORDEN CUMPLIDA. +10 Puntos 20Y. Genera nueva orden.';
-  notificar20Y('ORDEN CUMPLIDA', `+10 Puntos 20Y. Total: ${puntos}. Nivel 4/4 confirmado.`, true, 'ejecucion');
-}
-
-navigator.serviceWorker.addEventListener('message', e => {
-  if (e.data.type === 'GET_SPITH') {
-    e.ports[0].postMessage(generarTextoSpith());
-  }
-  if (e.data.type === 'GET_OBJETIVOS') {
-    e.ports[0].postMessage(getObjetivos());
-  }
-  if (e.data.type === 'OPEN_TAB') {
-    showTab(e.data.tab);
-  }
-});
-
-window.addEventListener('load', () => {
-  if (window.location.hash === '#spith') showTab('spith');
-  if (window.location.hash === '#objetivos') showTab('objetivos');
-  if (window.location.hash === '#usuario') showTab('usuario');
-  if (window.location.hash === '#ejecucion') showTab('ejecucion');
-});
-
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/service-worker.js');
-}
-cargar();
-</script>
-</body>
-</html>
+    <div class="kpi"><span>Progreso Total:</span><strong>${progresoTotal}%</strong></div>
