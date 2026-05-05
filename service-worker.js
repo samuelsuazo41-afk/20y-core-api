@@ -1,12 +1,36 @@
+const CACHE_NAME = '20y-pulse-v8';
+const urlsToCache = [
+  '/',
+  '/index.html',
+  '/manifest.json',
+  '/icon-192.png',
+  '/icon-512.png'
+];
+
 self.addEventListener('install', e => {
   self.skipWaiting();
+  e.waitUntil(
+    caches.open(CACHE_NAME)
+     .then(cache => cache.addAll(urlsToCache))
+  );
 });
 
 self.addEventListener('activate', e => {
-  e.waitUntil(clients.claim());
+  e.waitUntil(
+    caches.keys().then(keys => Promise.all(
+      keys.map(key => {
+        if (key!== CACHE_NAME) return caches.delete(key);
+      })
+    )).then(() => self.clients.claim())
+  );
 });
 
-self.addEventListener('fetch', e => e.respondWith(fetch(e.request)));
+self.addEventListener('fetch', e => {
+  e.respondWith(
+    caches.match(e.request)
+     .then(response => response || fetch(e.request))
+  );
+});
 
 self.addEventListener('message', e => {
   if (e.data.type === 'SCHEDULE_SPITH') {
@@ -44,7 +68,6 @@ function scheduleSpith(freq) {
     next.setDate(next.getDate() + diff);
   }
   const delay = next.getTime() - now.getTime();
-  
   setTimeout(() => {
     showSpithNotification();
     scheduleSpith(freq);
@@ -69,7 +92,6 @@ async function showSpithNotification() {
       data: { tab: 'spith' }
     });
   } else {
-    // Si la app está cerrada, manda genérico
     self.registration.showNotification('20Y SPITH DIARIO', {
       body: 'Nivel 4/4 activo. Abre 20Y para tu Spith de hoy.',
       icon: 'icon-192.png',
