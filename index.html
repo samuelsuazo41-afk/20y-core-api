@@ -4,33 +4,33 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>20Y PULSE</title>
-  <link rel="manifest" href="manifest.json?v=2">
+  <link rel="manifest" href="manifest.json?v=4">
   <meta name="theme-color" content="#00FF00">
   <link rel="icon" href="icon-192.png">
   <style>
     body { background:#000; color:#0f0; font-family:monospace; padding:20px; margin:0; }
     h1 { text-align:center; color:#0f0; margin:10px 0; }
     h2 { margin:15px 0 10px 0; font-size:18px; }
-.card { border:2px solid #0f0; padding:20px; margin:20px 0; border-radius:8px; }
+    .card { border:2px solid #0f0; padding:20px; margin:20px 0; border-radius:8px; }
     input,select,textarea { background:#111; border:1px solid #0f0; color:#0f0; padding:8px; width:100%; margin:5px 0; font-family:monospace; box-sizing:border-box; }
     button { background:#0f0; color:#000; border:none; padding:10px 20px; font-weight:bold; cursor:pointer; width:100%; margin-top:10px; }
     button:active { background:#0a0; }
     button.secondary { background:#333; color:#0f0; }
     button.danger { background:#500; color:#f00; }
-.row { display:flex; gap:10px; }
-.row input,.row select { flex:1; }
-.hidden { display:none; }
-.spith { background:#001100; border-left:4px solid #0f0; padding:15px; margin:15px 0; font-style:italic; }
-.objetivo { border:1px solid #0f0; padding:10px; margin:10px 0; border-radius:4px; }
-.objetivo-header { display:flex; justify-content:space-between; align-items:center; }
-.progress { background:#111; height:8px; border-radius:4px; margin:8px 0; }
-.progress-bar { background:#0f0; height:100%; border-radius:4px; transition:width 0.3s; }
-.tabs { display:flex; gap:5px; margin-bottom:15px; flex-wrap:wrap; }
-.tab { flex:1; padding:8px; background:#111; border:1px solid #0f0; cursor:pointer; text-align:center; min-width:80px; }
-.tab.active { background:#0f0; color:#000; font-weight:bold; }
-.orden { background:#110000; border:2px solid #f00; padding:15px; margin:15px 0; }
-.orden h3 { color:#f00; margin:0 0 10px 0; }
-.kpi { display:flex; justify-content:space-between; margin:8px 0; }
+    .row { display:flex; gap:10px; }
+    .row input,.row select { flex:1; }
+    .hidden { display:none; }
+    .spith { background:#001100; border-left:4px solid #0f0; padding:15px; margin:15px 0; font-style:italic; }
+    .objetivo { border:1px solid #0f0; padding:10px; margin:10px 0; border-radius:4px; }
+    .objetivo-header { display:flex; justify-content:space-between; align-items:center; }
+    .progress { background:#111; height:8px; border-radius:4px; margin:8px 0; }
+    .progress-bar { background:#0f0; height:100%; border-radius:4px; transition:width 0.3s; }
+    .tabs { display:flex; gap:5px; margin-bottom:15px; flex-wrap:wrap; }
+    .tab { flex:1; padding:8px; background:#111; border:1px solid #0f0; cursor:pointer; text-align:center; min-width:80px; }
+    .tab.active { background:#0f0; color:#000; font-weight:bold; }
+    .orden { background:#110000; border:2px solid #f00; padding:15px; margin:15px 0; }
+    .orden h3 { color:#f00; margin:0 0 10px 0; }
+    .kpi { display:flex; justify-content:space-between; margin:8px 0; }
   </style>
 </head>
 <body>
@@ -124,51 +124,4 @@
   <div style="text-align:center; margin-top:30px; opacity:0.7;">
     <p>20Y CORE SYSTEMS</p>
     <p style="font-size:12px;">SALT, GIRONA, SPAIN</p>
-  </div>
-
-<script>
-const spiths = [
-  "Nivel {nivel}. {puntos} 20Y. Stability {stability}. {objCount} misiones activas. Ejecuta.",
-  "{nombre}, {objCompletados}/{objCount} cazados. {puntos} 20Y. No pares ahora.",
-  "Stability {stability}. {puntos} 20Y. Target: {objPrincipal}. Nivel {nivel} exige sangre.",
-  "20Y PULSE: {objCompletados} objetivos eliminados. {puntos} puntos. Sube el standard o muere.",
-  "Estado {estado}. {objPendientes} objetivos abiertos. {puntos} 20Y no caen del cielo."
-];
-
-function showTab(tab) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('[id^="tab-"]').forEach(t => t.classList.add('hidden'));
-  document.querySelectorAll('.tab').forEach((t, i) => {
-    const tabs = ['usuario','objetivos','spith','ejecucion'];
-    if(tabs[i] === tab) t.classList.add('active');
-  });
-  document.getElementById('tab-'+tab).classList.remove('hidden');
-  if(tab === 'ejecucion') actualizarKPIs();
-}
-
-function notificar20Y(titulo, mensaje, vibrar = false, tab = 'objetivos') {
-  if (Notification.permission === 'granted') {
-    navigator.serviceWorker.ready.then(reg => {
-      reg.showNotification(titulo, {
-        body: mensaje,
-        icon: 'icon-192.png',
-        badge: 'icon-192.png',
-        tag: '20y-pulse',
-        vibrate: vibrar? [200,100,200] : [],
-        requireInteraction: true,
-        data: { tab: tab }
-      });
-    });
-  }
-}
-
-function cargar() {
-  document.getElementById('viewName').innerText = localStorage.getItem('20y_name') || 'Samuel Suazo';
-  document.getElementById('viewEstado').innerText = localStorage.getItem('20y_estado') || 'Activo';
-  document.getElementById('viewPuntos').innerText = localStorage.getItem('20y_puntos') || '127';
-  document.getElementById('viewNivel').innerText = localStorage.getItem('20y_nivel') || '4/4';
-  document.getElementById('viewStability').innerText = localStorage.getItem('20y_stability') || '98%';
-  document.getElementById('frecuencia').value = localStorage.getItem('20y_freq') || 'diario';
-  mostrarUltimoSpith();
-  checkNotifStatus();
-  cargarOb
+ 
