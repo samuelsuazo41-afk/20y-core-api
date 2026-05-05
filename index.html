@@ -1,3 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>20Y PULSE</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#00FF00">
+</head>
+<body>
+  <h1>20Y PULSE</h1>
+  <div id="app">CARGANDO...</div>
+
+<script>
+// PEGAR AQUÍ TODO EL JAVASCRIPT QUE TE DI ANTES
+
+function getObjetivos() {
+  return JSON.parse(localStorage.getItem('20y_objetivos') || '[]');
+}
+
+function setObjetivos(arr) {
+  localStorage.setItem('20y_objetivos', JSON.stringify(arr));
+}
+
+function cancelarObjetivo() {
+  // tu función cancelar
+}
+
 function guardarObjetivo() {
   const id = document.getElementById('objId').value || Date.now().toString();
   const titulo = document.getElementById('objTitulo').value;
@@ -11,7 +39,7 @@ function guardarObjetivo() {
     categoria: document.getElementById('objCategoria').value
   };
   
-  const objs = getObjetivos().filter(o => o.id!== id);
+  const objs = getObjetivos().filter(o => o.id !== id);
   objs.push(obj);
   setObjetivos(objs);
   cancelarObjetivo();
@@ -27,3 +55,9 @@ function guardarObjetivo() {
     });
   }
 }
+
+// AQUÍ VA EL RESTO DE TU CÓDIGO JS
+
+</script>
+</body>
+</html>
