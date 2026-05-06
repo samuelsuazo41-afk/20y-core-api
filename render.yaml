@@ -1,9 +1,14 @@
 services:
-    - type: web
-    name: 20y-core-api
-    env: python
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "uvicorn api_20y:app --host 0.0.0.0 --port 10000"
-    envVars:
-            - key: PYTHON_VERSION
-        value: 3.11.0
+    - type: static
+    name: 20y-pulse-1
+    repo: https://github.com/samuel-suazo41-afk/20y-core-api
+    branch: main
+    buildCommand: ""
+    staticPublishPath: .
+    headers:
+            - path: /service-worker.js
+        name: Service-Worker-Allowed
+        value: /
+            - path: /manifest.json
+        name: Content-Type
+        value: application/manifest+json
