@@ -1,14 +1,5 @@
 services:
     - type: static
-    name: 20y-pulse-1
-    repo: https://github.com/samuel-suazo41-afk/20y-core-api
-    branch: main
+    name: 20y-pulse-leyenda
     buildCommand: ""
     staticPublishPath: .
-    headers:
-            - path: /service-worker.js
-        name: Service-Worker-Allowed
-        value: /
-            - path: /manifest.json
-        name: Content-Type
-        value: application/manifest+json
