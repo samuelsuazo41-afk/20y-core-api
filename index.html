@@ -470,4 +470,79 @@ function generarOrdenEjecucion() {
     return;
   }
   const obj = objs[0];
-  const texto = `HOY: Avanza 1 unidad
+  const texto = `HOY: Avanza 1 unidad en "${obj.titulo}". Actual: ${obj.actual}/${obj.meta}. Categoría: ${obj.categoria}. No hay excusas.`;
+  document.getElementById('textoOrden').innerText = texto;
+  notificar20Y('⚡ 20Y ORDEN', texto, true, 'ejecucion');
+}
+
+function generarPlanEstrategico() {
+  const objs = getObjetivos();
+  const pendientes = objs.filter(o => o.actual < o.meta);
+  if(pendientes.length === 0) {
+    document.getElementById('textoPlan').innerHTML = '<p>Sin objetivos pendientes. Define tu próxima guerra.</p>';
+    document.getElementById('planBox').classList.remove('hidden');
+    return;
+  }
+  const pasos = pendientes.slice(0,3).map((o,i) => `<li><strong>Paso ${i+1}:</strong> ${o.titulo} - Llevar de ${o.actual} a ${o.meta}. Razón: ${o.desc || 'Core 20Y'}</li>`).join('');
+  const plan = `<p>Enfoque 72h para subir Stability Score:</p><ol>${pasos}</ol><p>Ejecuta Paso 1 hoy. Sin distracciones.</p>`;
+  document.getElementById('textoPlan').innerHTML = plan;
+  document.getElementById('planBox').classList.remove('hidden');
+  notificar20Y('📋 20Y PLAN', 'Plan estratégico generado. 3 pasos críticos definidos.', true, 'ejecucion');
+}
+
+function actualizarRacha() {
+  const hoy = new Date().toDateString();
+  const ultimaEjecucion = localStorage.getItem('20y_ultima_ejecucion');
+  let racha = parseInt(localStorage.getItem('20y_racha') || '0');
+  
+  if (ultimaEjecucion!== hoy) {
+    const ayer = new Date();
+    ayer.setDate(ayer.getDate() - 1);
+    if (ultimaEjecucion === ayer.toDateString()) {
+      racha++;
+    } else {
+      racha = 1;
+    }
+    localStorage.setItem('20y_racha', racha);
+    localStorage.setItem('20y_ultima_ejecucion', hoy);
+  }
+  return racha;
+}
+
+function checkNivel5() {
+  const puntos = parseInt(localStorage.getItem('20y_puntos') || '0');
+  const racha = parseInt(localStorage.getItem('20y_racha') || '0');
+  const stability = parseInt((localStorage.getItem('20y_stability') || '0%').replace('%',''));
+  const nivelActual = localStorage.getItem('20y_nivel') || '4/5 TITÁN';
+  
+  if (puntos >= 1000 && racha >= 30 && stability >= 90 && nivelActual!== '5/5 LEYENDA') {
+    localStorage.setItem('20y_nivel', '5/5 LEYENDA');
+    localStorage.setItem('20y_estado', '👑 LEYENDA 20Y 👑');
+    cargar();
+    notificar20Y('👑 NIVEL 5 DESBLOQUEADO', 'Eres LEYENDA 20Y. 1000pts + 30 días + 90% Stability. Misión cumplida.', true);
+  }
+}
+
+function marcarOrdenCumplida() {
+  const puntos = parseInt(localStorage.getItem('20y_puntos') || '0') + 10;
+  localStorage.setItem('20y_puntos', puntos);
+  let stability = parseInt((localStorage.getItem('20y_stability') || '0%').replace('%',''));
+  stability = Math.min(100, stability + 10);
+  localStorage.setItem('20y_stability', stability + '%');
+  const racha = actualizarRacha();
+  checkNivel5();
+  actualizarKPIs();
+  cargar();
+  notificar20Y('✅ 20Y ORDEN', `Orden cumplida. +10 puntos. Stability ${stability}%. Racha ${racha} días`, true, 'ejecucion');
+}
+
+function generarConsejoCoach() {
+  const estado = getEstadoUsuario();
+  const puntos = estado.puntos;
+  const stability = parseInt(estado.stability);
+  const nivel = estado.nivel;
+  
+  let categoria = 'inicio';
+  if(nivel.includes('LEYENDA')) categoria = 'leyenda';
+  else if(puntos > 500 && stability > 70) categoria = 'alto';
+  else if(puntos > 100 || stability > 40) categoria
